@@ -31,6 +31,24 @@ const player = {
         } else {
           console.log(`You didn't learn that spell : ${spell.name}.`);
         }
+    },
+    moove(direction) {
+        switch (direction) {
+            case 'Z':
+                this.positionY -= 1;
+                break;
+            case 'Q':
+                this.positionX -= 1;
+                break;
+            case 'S':
+                this.positionY += 1;
+                break;
+            case 'D':
+                this.positionX += 1;
+                break;
+            default:
+                console.log("Direction non reconnue.");
+        }
     }
 };
   
