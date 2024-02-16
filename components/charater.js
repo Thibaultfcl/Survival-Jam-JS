@@ -51,17 +51,15 @@ const player = {
         }
     }
 };
-  
-    //spell object
-    const fireBall = {
-        name: "Fireball",
-        dmg: 20,
-        manaCost: 30,
-    };
 
-    //item object
-    const sword = {
-        name: "Sword",
-        dmg: 10,
-    };
-  
+//spell object
+const fireBall = {
+    name: "Fireball",
+    dmg: 20,
+    manaCost: 30,
+};
+//item object
+const sword = {
+    name: "Sword",
+    dmg: 10,
+};
