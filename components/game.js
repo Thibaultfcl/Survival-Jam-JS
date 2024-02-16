@@ -2,13 +2,55 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Définition de la taille du joueur
-const playerSize = 50; // Ajustez la taille du joueur selon vos besoins
-let playerX = canvas.width / 2;
-let playerY = canvas.height / 2;
+const player = {
+    size : 50,
+    selectedCharacter : "/public/renard.png",
+    x : canvas.width / 2,
+    y : canvas.height / 2,
+    pv: 100,
+    inventory: [],
+    spells: [],
+    isAlive() {
+        return this.pv > 0;
+    },
+    printStatus() {
+        console.log(`Player's status :
+            Position X: ${this.x}
+            Position Y: ${this.y}
+            PV: ${this.pv}
+            Inventory: ${this.inventory.join(", ")}
+            Spells: ${this.spells.join(", ")}`);
+    },
+    addObject(object) {
+        this.inventory.push(object);
+        console.log(`You add ${object.name} in your inventory.`);
+    },
+    addSpell(spell) {
+      this.spells.push(spell.name);
+      console.log(`You learn the spell : ${spell.name}.`);
+    },
+    castSpell(spell) {
+        const sortIndex = this.spells.indexOf(spell);
+        if (sortIndex !== -1) {
+          console.log(`You are casting the spell : ${spell.name}.`);
+          //spell logic here
+        } else {
+          console.log(`You didn't learn that spell : ${spell.name}.`);
+        }
+    },
+};
 
-// Chemin de l'image du personnage sélectionné
-let selectedCharacter = "/public/renard.png"; // Par défaut, le panda est sélectionné
+//spell object
+const fireBall = {
+    name: "Fireball",
+    dmg: 20,
+    manaCost: 30,
+};
+//item object
+const sword = {
+    name: "Sword",
+    dmg: 10,
+};
 
 // Définition des cartes
 const maps = [
@@ -22,8 +64,8 @@ let currentMapIndex = 0;
 // Fonction pour dessiner le joueur
 function drawPlayer() {
     const playerImg = new Image();
-    playerImg.src = selectedCharacter;
-    ctx.drawImage(playerImg, playerX - playerSize / 2, playerY - playerSize / 2, playerSize, playerSize);
+    playerImg.src = player.selectedCharacter;
+    ctx.drawImage(playerImg, player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
 }
 
 // Fonction pour dessiner la carte
@@ -53,42 +95,42 @@ document.addEventListener('keydown', function(event) {
 
     // Déplacement du joueur
     if (keyPressed === 'ArrowUp') {
-        if (playerY - 5 >= 0) {
-            playerY -= 5;
+        if (player.y - 5 >= 0) {
+            player.y -= 5;
         }
     } else if (keyPressed === 'ArrowDown') {
-        if (playerY + 5 <= canvas.height) {
-            playerY += 5;
+        if (player.y + 5 <= canvas.height) {
+            player.y += 5;
         }
     } else if (keyPressed === 'ArrowLeft') {
-        if (playerX - 5 >= 0) {
-            playerX -= 5;
+        if (player.x - 5 >= 0) {
+            player.x -= 5;
         } else {
             // Le joueur dépasse la limite vers la gauche
             if (currentMapIndex > 0) {
                 currentMapIndex--;
-                playerX = canvas.width - playerSize / 2; // Déplacer le joueur à l'extrême droite de la carte précédente
+                player.x = canvas.width - player.size / 2; // Déplacer le joueur à l'extrême droite de la carte précédente
             }
         }
     } else if (keyPressed === 'ArrowRight') {
-        if (currentMapIndex === 0 && playerX + 5 > maps[currentMapIndex].width) {
+        if (currentMapIndex === 0 && player.x + 5 > maps[currentMapIndex].width) {
             // Le joueur dépasse la limite vers la droite de la première carte
             currentMapIndex++;
-            playerX = playerSize / 2; // Déplacer le joueur à l'extrême gauche de la carte suivante
-        } else if (currentMapIndex === 1 && playerX + 5 > maps[currentMapIndex].width) {
+            player.x = player.size / 2; // Déplacer le joueur à l'extrême gauche de la carte suivante
+        } else if (currentMapIndex === 1 && player.x + 5 > maps[currentMapIndex].width) {
             // Le joueur dépasse la limite vers la droite de la deuxième carte
             currentMapIndex++;
-            playerX = playerSize / 2; // Déplacer le joueur à l'extrême gauche de la carte suivante
-        } else if (currentMapIndex === 2 && playerX + 5 > maps[currentMapIndex].width) {
+            player.x = player.size / 2; // Déplacer le joueur à l'extrême gauche de la carte suivante
+        } else if (currentMapIndex === 2 && player.x + 5 > maps[currentMapIndex].width) {
             currentMapIndex++;
-            playerX = playerSize / 2; // Déplacer le joueur à l'extrême gauche de la carte suivante
+            player.x = player.size / 2; // Déplacer le joueur à l'extrême gauche de la carte suivante
             // Le joueur dépasse la limite vers la droite de la troisieme carte
             
-        } else if (currentMapIndex === 3 && playerX + 5 > maps[currentMapIndex].width) {
+        } else if (currentMapIndex === 3 && player.x + 5 > maps[currentMapIndex].width) {
             // Ajouter ici le code pour placer une barrière ou prendre une autre action
             // pour empêcher le joueur de continuer en dehors des limites
         } else {
-            playerX += 5;
+            player.x += 5;
         }
     }
 });
