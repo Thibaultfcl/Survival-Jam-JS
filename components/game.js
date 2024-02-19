@@ -1,141 +1,149 @@
-// Initialisation du jeu
+// Constants
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const PLAYER_SIZE = 50;
+const PLAYER_SPEED = 10;
+const MAP_WIDTH = 1200;
+const MAP_HEIGHT = 600;
 
+// Objects
 const player = {
-    size : 50,
-    selectedCharacter : "/public/renard.png",
-    x : canvas.width / 2,
-    y : canvas.height / 2,
+    size: PLAYER_SIZE,
+    selectedCharacter: "/assets/img/renard.png",
+    x: canvas.width / 2,
+    y: canvas.height / 2,
     pv: 100,
     inventory: [],
     spells: [],
     isAlive() {
         return this.pv > 0;
-    },
-    printStatus() {
-        console.log(`Player's status :
-            Position X: ${this.x}
-            Position Y: ${this.y}
-            PV: ${this.pv}
-            Inventory: ${this.inventory.join(", ")}
-            Spells: ${this.spells.join(", ")}`);
-    },
-    addObject(object) {
-        this.inventory.push(object);
-        console.log(`You add ${object.name} in your inventory.`);
-    },
-    addSpell(spell) {
-      this.spells.push(spell.name);
-      console.log(`You learn the spell : ${spell.name}.`);
-    },
-    castSpell(spell) {
-        const sortIndex = this.spells.indexOf(spell);
-        if (sortIndex !== -1) {
-          console.log(`You are casting the spell : ${spell.name}.`);
-          //spell logic here
-        } else {
-          console.log(`You didn't learn that spell : ${spell.name}.`);
-        }
-    },
+    }
 };
 
-//spell object
-const fireBall = {
-    name: "Fireball",
-    dmg: 20,
-    manaCost: 30,
-};
-//item object
-const sword = {
-    name: "Sword",
-    dmg: 10,
-};
-
-// Définition des cartes
 const maps = [
-    { image: "/public/map1.png", width: 1495, height: 820 },
-    { image: "/public/map2.png", width: 1495, height: 820 },
-    { image: "/public/map3.png", width: 1495, height: 820 },
-    { image: "/public/map4.png", width: 1495, height: 820 }
+    { image: "/assets/img/map1.png" },
+    { image: "/assets/img/map2.png" },
+    { image: "/assets/img/map3.png" },
+    { image: "/assets/img/map4.png" }
 ];
 let currentMapIndex = 0;
 
-// Fonction pour dessiner le joueur
+// Obstacles
+const obstacles = [
+    { x: 200, y: 300, width: 50, height: 50 },
+    { x: 500, y: 200, width: 70, height: 30 },
+];
+
+// Draw the player
 function drawPlayer() {
     const playerImg = new Image();
     playerImg.src = player.selectedCharacter;
     ctx.drawImage(playerImg, player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
 }
 
-// Fonction pour dessiner la carte
+// Draw the map
 function drawMap() {
     const map = maps[currentMapIndex];
     const mapImg = new Image();
     mapImg.src = map.image;
-    ctx.drawImage(mapImg, 0, 0, map.width, map.height);
+    ctx.drawImage(mapImg, 0, 0, MAP_WIDTH, MAP_HEIGHT);
 }
 
-// Fonction principale pour mettre à jour le jeu
-function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Efface l'écran
-
-    // Dessine la carte actuelle
-    drawMap();
-
-    // Met à jour et dessine le joueur
-    drawPlayer();
-
-    requestAnimationFrame(update); // Appelle update() à nouveau pour créer une boucle de jeu
+// Draw the obstacles
+function drawObstacles() {
+    ctx.fillStyle = 'red';
+    obstacles.forEach(obstacle => {
+        ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+    });
 }
 
-// Écouteur d'événement pour les touches de déplacement
-document.addEventListener('keydown', function(event) {
-    const keyPressed = event.key;
+// Check collisions between player and obstacles
+function checkCollisions() {
+    obstacles.forEach(obstacle => {
+        if (
+            player.x < obstacle.x + obstacle.width &&
+            player.x + player.size > obstacle.x &&
+            player.y < obstacle.y + obstacle.height &&
+            player.y + player.size > obstacle.y
+        ) {
+            if (player.x < obstacle.x) {
+                player.x = obstacle.x - player.size;
+            } else if (player.x > obstacle.x) {
+                player.x = obstacle.x + obstacle.width;
+            }
 
-    // Déplacement du joueur
-    if (keyPressed === 'ArrowUp') {
-        if (player.y - 5 >= 0) {
-            player.y -= 5;
-        }
-    } else if (keyPressed === 'ArrowDown') {
-        if (player.y + 5 <= canvas.height) {
-            player.y += 5;
-        }
-    } else if (keyPressed === 'ArrowLeft') {
-        if (player.x - 5 >= 0) {
-            player.x -= 5;
-        } else {
-            // Le joueur dépasse la limite vers la gauche
-            if (currentMapIndex > 0) {
-                currentMapIndex--;
-                player.x = canvas.width - player.size / 2; // Déplacer le joueur à l'extrême droite de la carte précédente
+            if (player.y < obstacle.y) {
+                player.y = obstacle.y - player.size;
+            } else if (player.y > obstacle.y) {
+                player.y = obstacle.y + obstacle.height;
             }
         }
+    });
+}
+
+// Update the game
+function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw map
+    drawMap();
+
+    // Draw player
+    drawPlayer();
+    
+    // Draw obstacles
+    drawObstacles();
+    
+    // Check collisions
+    checkCollisions();
+    
+    requestAnimationFrame(update);
+}
+
+// Handle movement events
+function handleMovement(event) {
+    const keyPressed = event.key;
+
+    if (keyPressed === 'ArrowUp' && player.y - PLAYER_SPEED >= 0) {
+        player.y -= PLAYER_SPEED;
+    } else if (keyPressed === 'ArrowDown' && player.y + PLAYER_SPEED <= canvas.height) {
+        player.y += PLAYER_SPEED;
+    } else if (keyPressed === 'ArrowLeft') {
+        handleLeftArrow();
     } else if (keyPressed === 'ArrowRight') {
-        if (currentMapIndex === 0 && player.x + 5 > maps[currentMapIndex].width) {
-            // Le joueur dépasse la limite vers la droite de la première carte
-            currentMapIndex++;
-            player.x = player.size / 2; // Déplacer le joueur à l'extrême gauche de la carte suivante
-        } else if (currentMapIndex === 1 && player.x + 5 > maps[currentMapIndex].width) {
-            // Le joueur dépasse la limite vers la droite de la deuxième carte
-            currentMapIndex++;
-            player.x = player.size / 2; // Déplacer le joueur à l'extrême gauche de la carte suivante
-        } else if (currentMapIndex === 2 && player.x + 5 > maps[currentMapIndex].width) {
-            currentMapIndex++;
-            player.x = player.size / 2; // Déplacer le joueur à l'extrême gauche de la carte suivante
-            // Le joueur dépasse la limite vers la droite de la troisieme carte
-            
-        } else if (currentMapIndex === 3 && player.x + 5 > maps[currentMapIndex].width) {
-            // Ajouter ici le code pour placer une barrière ou prendre une autre action
-            // pour empêcher le joueur de continuer en dehors des limites
-        } else {
-            player.x += 5;
+        handleRightArrow();
+    }
+}
+
+// Handle right arrow movements
+function handleRightArrow() {
+    if (currentMapIndex === 0 && player.x + PLAYER_SPEED > MAP_WIDTH) {
+        currentMapIndex++;
+        player.x = PLAYER_SIZE / 2;
+    } else if (currentMapIndex >= 1 && currentMapIndex < maps.length - 1 && player.x + PLAYER_SPEED > MAP_WIDTH) {
+        currentMapIndex++;
+        player.x = PLAYER_SIZE / 2;
+    } else if (currentMapIndex === maps.length - 1 && player.x + PLAYER_SPEED > MAP_WIDTH) {
+        // Add logic here to prevent the player from moving beyond the boundaries
+    } else {
+        player.x += PLAYER_SPEED;
+    }
+}
+
+// Handle left arrow movements
+function handleLeftArrow() {
+    if (player.x - PLAYER_SPEED >= 0) {
+        player.x -= PLAYER_SPEED;
+    } else {
+        if (currentMapIndex > 0) {
+            currentMapIndex--;
+            player.x = canvas.width - player.size / 2;
         }
     }
-});
+}
 
+// Event listener for movement keys
+document.addEventListener('keydown', handleMovement);
 
-
-// Lancer le jeu
-update(); // Démarre la boucle de jeu
+// Start the game
+update();

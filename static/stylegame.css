@@ -4,8 +4,15 @@ body {
     overflow: hidden;
 }
 
-/* canvas {
-    display: block;
-    background-image: url('../public/map1.png');
-    background-size: cover;
-} */
+body, html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(70, 70, 70);
+}
+
+canvas {
+  border: 5px solid rgb(0, 0, 0);
+}
