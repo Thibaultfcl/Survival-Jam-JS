@@ -1,8 +1,8 @@
 // Constants
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-const PLAYER_SIZE = 50;
-const PLAYER_SPEED = 10;
+const PLAYER_SIZE = 70;
+const PLAYER_SPEED = 20;
 const MAP_WIDTH = 1200;
 const MAP_HEIGHT = 600;
 
@@ -30,8 +30,12 @@ let currentMapIndex = 0;
 
 // Obstacles
 const obstacles = [
-    { x: 200, y: 300, width: 50, height: 50 },
-    { x: 500, y: 200, width: 70, height: 30 },
+    { x: 0, y: 0, width: 1200, height: 50 },
+    { x: 0, y: 0, width: 50, height: 200 },
+    { x: 0, y: 400, width: 50, height: 200 },
+    { x: 0, y: 550, width: 1200, height: 50 },
+    { x: 1150, y: 0, width: 50, height: 200 },
+    { x: 1150, y: 400, width: 50, height: 200 },
 ];
 
 // Draw the player
@@ -51,33 +55,9 @@ function drawMap() {
 
 // Draw the obstacles
 function drawObstacles() {
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = 'black';
     obstacles.forEach(obstacle => {
         ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-    });
-}
-
-// Check collisions between player and obstacles
-function checkCollisions() {
-    obstacles.forEach(obstacle => {
-        if (
-            player.x < obstacle.x + obstacle.width &&
-            player.x + player.size > obstacle.x &&
-            player.y < obstacle.y + obstacle.height &&
-            player.y + player.size > obstacle.y
-        ) {
-            if (player.x < obstacle.x) {
-                player.x = obstacle.x - player.size;
-            } else if (player.x > obstacle.x) {
-                player.x = obstacle.x + obstacle.width;
-            }
-
-            if (player.y < obstacle.y) {
-                player.y = obstacle.y - player.size;
-            } else if (player.y > obstacle.y) {
-                player.y = obstacle.y + obstacle.height;
-            }
-        }
     });
 }
 
@@ -94,9 +74,6 @@ function update() {
     // Draw obstacles
     drawObstacles();
     
-    // Check collisions
-    checkCollisions();
-    
     requestAnimationFrame(update);
 }
 
@@ -104,14 +81,22 @@ function update() {
 function handleMovement(event) {
     const keyPressed = event.key;
 
-    if (keyPressed === 'ArrowUp' && player.y - PLAYER_SPEED >= 0) {
-        player.y -= PLAYER_SPEED;
-    } else if (keyPressed === 'ArrowDown' && player.y + PLAYER_SPEED <= canvas.height) {
-        player.y += PLAYER_SPEED;
+    if (keyPressed === 'ArrowUp') {
+        if (player.y - PLAYER_SPEED >= 0 && !checkCollision(player.x, player.y - PLAYER_SPEED)) {
+            player.y -= PLAYER_SPEED;
+        }
+    } else if (keyPressed === 'ArrowDown') {
+        if (player.y + PLAYER_SPEED <= canvas.height && !checkCollision(player.x, player.y + PLAYER_SPEED)) {
+            player.y += PLAYER_SPEED;
+        }
     } else if (keyPressed === 'ArrowLeft') {
-        handleLeftArrow();
+        if (!checkCollision(player.x - PLAYER_SPEED, player.y)) {
+            handleLeftArrow();
+        }
     } else if (keyPressed === 'ArrowRight') {
-        handleRightArrow();
+        if (!checkCollision(player.x + PLAYER_SPEED, player.y)) {
+            handleRightArrow();
+        }
     }
 }
 
@@ -124,7 +109,6 @@ function handleRightArrow() {
         currentMapIndex++;
         player.x = PLAYER_SIZE / 2;
     } else if (currentMapIndex === maps.length - 1 && player.x + PLAYER_SPEED > MAP_WIDTH) {
-        // Add logic here to prevent the player from moving beyond the boundaries
     } else {
         player.x += PLAYER_SPEED;
     }
@@ -142,8 +126,23 @@ function handleLeftArrow() {
     }
 }
 
+function checkCollision(x, y) {
+    let willCollide = false;
+    obstacles.forEach(obstacle => {
+        if (
+            x-20 < obstacle.x + obstacle.width &&
+            x+20 > obstacle.x &&
+            y-20 < obstacle.y + obstacle.height &&
+            y+20 > obstacle.y
+        ) {
+            willCollide = true;
+        }
+    });
+    return willCollide;
+}
+
 // Event listener for movement keys
-document.addEventListener('keydown', handleMovement);
+window.addEventListener('keydown', handleMovement);
 
 // Start the game
 update();
