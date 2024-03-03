@@ -2,7 +2,7 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const PLAYER_SIZE = 70;
-const PLAYER_SPEED = 20;
+const PLAYER_SPEED = 10;
 const MAP_WIDTH = 1200;
 const MAP_HEIGHT = 600;
 
@@ -73,27 +73,32 @@ function update() {
     
     // Draw obstacles
     drawObstacles();
+
+    // Handle Movement
+    handleMovement();
     
     requestAnimationFrame(update);
 }
 
 // Handle movement events
 function handleMovement(event) {
-    const keyPressed = event.key;
 
-    if (keyPressed === 'ArrowUp') {
+    if (keys['ArrowUp']) {
         if (player.y - PLAYER_SPEED >= 0 && !checkCollision(player.x, player.y - PLAYER_SPEED)) {
             player.y -= PLAYER_SPEED;
         }
-    } else if (keyPressed === 'ArrowDown') {
+    } 
+    if (keys['ArrowDown']) {
         if (player.y + PLAYER_SPEED <= canvas.height && !checkCollision(player.x, player.y + PLAYER_SPEED)) {
             player.y += PLAYER_SPEED;
         }
-    } else if (keyPressed === 'ArrowLeft') {
+    }
+    if (keys['ArrowLeft']) {
         if (!checkCollision(player.x - PLAYER_SPEED, player.y)) {
             handleLeftArrow();
         }
-    } else if (keyPressed === 'ArrowRight') {
+    }
+    if (keys['ArrowRight']) {
         if (!checkCollision(player.x + PLAYER_SPEED, player.y)) {
             handleRightArrow();
         }
@@ -142,7 +147,14 @@ function checkCollision(x, y) {
 }
 
 // Event listener for movement keys
-window.addEventListener('keydown', handleMovement);
+const keys = {};
+document.addEventListener('keydown', (event) => {
+    keys[event.key] = true;
+});
+
+document.addEventListener('keyup', (event) => {
+    keys[event.key] = false;
+});
 
 // Start the game
 update();
