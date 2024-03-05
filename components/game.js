@@ -9,7 +9,7 @@ const MAP_HEIGHT = 600;
 // Objects
 const player = {
     size: PLAYER_SIZE,
-    selectedCharacter: "/assets/img/renard.png",
+    selectedCharacter: character,
     x: canvas.width / 2,
     y: canvas.height / 2,
     pv: 100,
