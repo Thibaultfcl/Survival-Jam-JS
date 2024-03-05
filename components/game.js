@@ -29,14 +29,38 @@ const maps = [
 let currentMapIndex = 0;
 
 // Obstacles
-const obstacles = [
-    { x: 0, y: 0, width: 1200, height: 50 },
-    { x: 0, y: 0, width: 50, height: 200 },
-    { x: 0, y: 400, width: 50, height: 200 },
-    { x: 0, y: 550, width: 1200, height: 50 },
-    { x: 1150, y: 0, width: 50, height: 200 },
-    { x: 1150, y: 400, width: 50, height: 200 },
-];
+const obstacles = {
+    1 : [
+        { x: 0, y: 0, width: 1200, height: 50 },
+        { x: 0, y: 0, width: 50, height: 600 },
+        { x: 0, y: 550, width: 1200, height: 50 },
+        { x: 1150, y: 0, width: 50, height: 200 },
+        { x: 1150, y: 400, width: 50, height: 200 },
+    ],
+    2 : [
+        { x: 0, y: 0, width: 1200, height: 50 },
+        { x: 0, y: 0, width: 50, height: 200 },
+        { x: 0, y: 400, width: 50, height: 200 },
+        { x: 0, y: 550, width: 1200, height: 50 },
+        { x: 1150, y: 0, width: 50, height: 200 },
+        { x: 1150, y: 400, width: 50, height: 200 },
+    ],
+    3 : [
+        { x: 0, y: 0, width: 1200, height: 50 },
+        { x: 0, y: 0, width: 50, height: 200 },
+        { x: 0, y: 400, width: 50, height: 200 },
+        { x: 0, y: 550, width: 1200, height: 50 },
+        { x: 1150, y: 0, width: 50, height: 200 },
+        { x: 1150, y: 400, width: 50, height: 200 },
+    ],
+    4 : [
+        { x: 0, y: 0, width: 1200, height: 50 },
+        { x: 0, y: 0, width: 50, height: 200 },
+        { x: 0, y: 400, width: 50, height: 200 },
+        { x: 0, y: 550, width: 1200, height: 50 },
+        { x: 1150, y: 0, width: 50, height: 600 },
+    ],
+};
 
 // Draw the player
 function drawPlayer() {
@@ -56,10 +80,12 @@ function drawMap() {
 // Draw the obstacles
 function drawObstacles() {
     ctx.fillStyle = 'black';
-    obstacles.forEach(obstacle => {
+    const currentMapObstacles = obstacles[currentMapIndex+1];
+    currentMapObstacles.forEach(obstacle => {
         ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
     });
 }
+
 
 // Update the game
 function update() {
@@ -133,7 +159,8 @@ function handleLeftArrow() {
 
 function checkCollision(x, y) {
     let willCollide = false;
-    obstacles.forEach(obstacle => {
+    const currentMapObstacles = obstacles[currentMapIndex+1];
+    currentMapObstacles.forEach(obstacle => {
         if (
             x-20 < obstacle.x + obstacle.width &&
             x+20 > obstacle.x &&
