@@ -2,14 +2,13 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const PLAYER_SIZE = 70;
-const PLAYER_SPEED = 10;
+const PLAYER_SPEED = 5;
 const MAP_WIDTH = 1200;
 const MAP_HEIGHT = 600;
 
-// Objects
 const player = {
     size: PLAYER_SIZE,
-    selectedCharacter: character,
+    character: null,
     x: canvas.width / 2,
     y: canvas.height / 2,
     pv: 100,
@@ -20,6 +19,7 @@ const player = {
     }
 };
 
+// Maps
 const maps = [
     { image: "/assets/img/map1.png" },
     { image: "/assets/img/map2.png" },
@@ -65,7 +65,7 @@ const obstacles = {
 // Draw the player
 function drawPlayer() {
     const playerImg = new Image();
-    playerImg.src = player.selectedCharacter;
+    playerImg.src = player.character;
     ctx.drawImage(playerImg, player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
 }
 
@@ -184,4 +184,7 @@ document.addEventListener('keyup', (event) => {
 });
 
 // Start the game
-update();
+function startGame(selectedCharacter) {
+    player.character = selectedCharacter;
+    update();
+}

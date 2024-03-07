@@ -1,4 +1,4 @@
-var character;
+var selectedCharacter;
 
 document.addEventListener("DOMContentLoaded", function() {
     var canvas = document.getElementById("gameCanvas");
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
     modalContent.className = "modal-content";
 
     var heading = document.createElement("h2");
-    heading.textContent = "Choisissez votre personnage";
+    heading.textContent = "Choose your character";
 
     var character1Button = document.createElement("button");
     character1Button.id = "character1";
@@ -30,27 +30,23 @@ document.addEventListener("DOMContentLoaded", function() {
     document.body.appendChild(characterModal);
 
     var canvasRect = canvas.getBoundingClientRect();
-    var modalWidth = 200; // Largeur du pop-up
-    var modalHeight = 150; // Hauteur du pop-up
+    var modalWidth = 200;
+    var modalHeight = 150;
     characterModal.style.left = canvasRect.left + (canvas.width - modalWidth) / 2 + "px";
     characterModal.style.top = canvasRect.top + (canvas.height - modalHeight) / 2 + "px";
-
-    window.addEventListener("click", function(event) {
-        if (event.target == characterModal) {
-            characterModal.style.display = "none";
-        }
-    });
 
     var character1Button = document.getElementById("character1");
     var character2Button = document.getElementById("character2");
 
     character1Button.addEventListener("click", function() {
-        character = "/assets/img/chat.png";
+        selectedCharacter = "/assets/img/chat.png";
         characterModal.style.display = "none";
+        startGame(selectedCharacter);
     });
 
     character2Button.addEventListener("click", function() {
-        character = "/assets/img/chien.png";
+        selectedCharacter = "/assets/img/chien.png";
         characterModal.style.display = "none";
+        startGame(selectedCharacter);
     });
 });
