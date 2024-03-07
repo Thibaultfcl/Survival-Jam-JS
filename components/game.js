@@ -19,6 +19,18 @@ const player = {
     }
 };
 
+const ennemy1 = {
+    size: PLAYER_SIZE,
+    character: "/assets/img/ennemy.png",
+    x: 900,
+    y: 300,
+    map: 1,
+    pv: 25,
+    isAlive() {
+        return this.pv > 0;
+    }
+}
+
 // Maps
 const maps = [
     { image: "/assets/img/map1.png" },
@@ -69,6 +81,15 @@ function drawPlayer() {
     ctx.drawImage(playerImg, player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
 }
 
+//Draw the ennemy
+function drawEnnemy(ennemy) {
+    if (ennemy.map == currentMapIndex) {
+        const ennemyImg = new Image();
+        ennemyImg.src = ennemy.character;
+        ctx.drawImage(ennemyImg, ennemy.x - ennemy.size / 2, ennemy.y - ennemy.size / 2, ennemy.size, ennemy.size);
+    }
+}
+
 // Draw the map
 function drawMap() {
     const map = maps[currentMapIndex];
@@ -96,6 +117,9 @@ function update() {
 
     // Draw player
     drawPlayer();
+
+    // Draw ennemy
+    drawEnnemy(ennemy1);
     
     // Draw obstacles
     drawObstacles();
