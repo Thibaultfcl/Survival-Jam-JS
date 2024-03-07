@@ -5,6 +5,7 @@ const PLAYER_SIZE = 70;
 const PLAYER_SPEED = 5;
 const MAP_WIDTH = 1200;
 const MAP_HEIGHT = 600;
+let lastDirection = 'right';
 
 const player = {
     size: PLAYER_SIZE,
@@ -20,11 +21,11 @@ const player = {
 };
 
 const ennemy1 = {
-    size: PLAYER_SIZE,
+    size: PLAYER_SIZE + 20,
     character: "/assets/img/ennemy.png",
     x: 900,
     y: 300,
-    map: 1,
+    map: 2,
     pv: 25,
     isAlive() {
         return this.pv > 0;
@@ -78,12 +79,20 @@ const obstacles = {
 function drawPlayer() {
     const playerImg = new Image();
     playerImg.src = player.character;
-    ctx.drawImage(playerImg, player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
+    if (lastDirection === 'left') {
+        ctx.save();
+        ctx.translate(player.x, player.y);
+        ctx.scale(-1, 1);
+        ctx.drawImage(playerImg, -player.size / 2, -player.size / 2, player.size, player.size);
+        ctx.restore();
+    } else {
+        ctx.drawImage(playerImg, player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
+    }
 }
 
 //Draw the ennemy
 function drawEnnemy(ennemy) {
-    if (ennemy.map == currentMapIndex) {
+    if (ennemy.map == currentMapIndex + 1) {
         const ennemyImg = new Image();
         ennemyImg.src = ennemy.character;
         ctx.drawImage(ennemyImg, ennemy.x - ennemy.size / 2, ennemy.y - ennemy.size / 2, ennemy.size, ennemy.size);
@@ -146,11 +155,13 @@ function handleMovement(event) {
     if (keys['ArrowLeft']) {
         if (!checkCollision(player.x - PLAYER_SPEED, player.y)) {
             handleLeftArrow();
+            lastDirection = 'left';
         }
     }
     if (keys['ArrowRight']) {
         if (!checkCollision(player.x + PLAYER_SPEED, player.y)) {
             handleRightArrow();
+            lastDirection = 'right';
         }
     }
 }

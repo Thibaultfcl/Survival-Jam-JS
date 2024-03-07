@@ -16,11 +16,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var character1Button = document.createElement("button");
     character1Button.id = "character1";
-    character1Button.textContent = "Personnage 1";
+    character1Button.textContent = "Knight";
 
     var character2Button = document.createElement("button");
     character2Button.id = "character2";
-    character2Button.textContent = "Personnage 2";
+    character2Button.textContent = "Mage";
 
     modalContent.appendChild(heading);
     modalContent.appendChild(character1Button);
@@ -39,13 +39,13 @@ document.addEventListener("DOMContentLoaded", function() {
     var character2Button = document.getElementById("character2");
 
     character1Button.addEventListener("click", function() {
-        selectedCharacter = "/assets/img/chat.png";
+        selectedCharacter = "/assets/img/chevalier.png";
         characterModal.style.display = "none";
         startGame(selectedCharacter);
     });
 
     character2Button.addEventListener("click", function() {
-        selectedCharacter = "/assets/img/chien.png";
+        selectedCharacter = "/assets/img/mage.png";
         characterModal.style.display = "none";
         startGame(selectedCharacter);
     });
