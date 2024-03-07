@@ -7,6 +7,7 @@ const MAP_WIDTH = 1200;
 const MAP_HEIGHT = 600;
 let lastDirection = 'right';
 
+// Player
 const player = {
     size: PLAYER_SIZE,
     character: null,
@@ -20,6 +21,7 @@ const player = {
     }
 };
 
+// Ennemies
 const ennemy1 = {
     size: PLAYER_SIZE + 20,
     character: "/assets/img/ennemy.png",
@@ -31,6 +33,20 @@ const ennemy1 = {
         return this.pv > 0;
     }
 }
+
+const ennemy2 = {
+    size: PLAYER_SIZE + 20,
+    character: "/assets/img/ennemy.png",
+    x: 900,
+    y: 300,
+    map: 3,
+    pv: 25,
+    isAlive() {
+        return this.pv > 0;
+    }
+}
+
+const ennemies = [ennemy1, ennemy2];
 
 // Maps
 const maps = [
@@ -91,12 +107,14 @@ function drawPlayer() {
 }
 
 //Draw the ennemy
-function drawEnnemy(ennemy) {
-    if (ennemy.map == currentMapIndex + 1) {
-        const ennemyImg = new Image();
-        ennemyImg.src = ennemy.character;
-        ctx.drawImage(ennemyImg, ennemy.x - ennemy.size / 2, ennemy.y - ennemy.size / 2, ennemy.size, ennemy.size);
-    }
+function drawEnnemy() {
+    ennemies.forEach(ennemy => {
+        if (ennemy.map == currentMapIndex + 1) {
+            const ennemyImg = new Image();
+            ennemyImg.src = ennemy.character;
+            ctx.drawImage(ennemyImg, ennemy.x - ennemy.size / 2, ennemy.y - ennemy.size / 2, ennemy.size, ennemy.size);
+        }
+    });
 }
 
 // Draw the map
@@ -128,7 +146,7 @@ function update() {
     drawPlayer();
 
     // Draw ennemy
-    drawEnnemy(ennemy1);
+    drawEnnemy();
     
     // Draw obstacles
     drawObstacles();
@@ -207,6 +225,11 @@ function checkCollision(x, y) {
     });
     return willCollide;
 }
+
+// function checkFight(x, y) {
+//     let willFight = false;
+    
+// }
 
 // Event listener for movement keys
 const keys = {};
