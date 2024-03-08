@@ -24,7 +24,7 @@ const player = {
 // Ennemies
 const ennemy1 = {
     size: PLAYER_SIZE + 20,
-    character: "/Survival-Jam-JS/assets/img/ennemy.png",
+    character: "/assets/img/ennemy.png",
     x: 900,
     y: 300,
     map: 2,
@@ -162,22 +162,30 @@ function handleMovement(event) {
 
     if (keys['ArrowUp'] || keys['z']) {
         if (player.y - PLAYER_SPEED >= 0 && !checkCollision(player.x, player.y - PLAYER_SPEED)) {
+            if (!checkFight(player.x, player.y - PLAYER_SPEED)) {
+            }
             player.y -= PLAYER_SPEED;
         }
     } 
     if (keys['ArrowDown'] || keys['s']) {
         if (player.y + PLAYER_SPEED <= canvas.height && !checkCollision(player.x, player.y + PLAYER_SPEED)) {
+            if (!checkFight(player.x, player.y - PLAYER_SPEED)) {
+            }
             player.y += PLAYER_SPEED;
         }
     }
     if (keys['ArrowLeft'] || keys['q']) {
         if (!checkCollision(player.x - PLAYER_SPEED, player.y)) {
+            if (!checkFight(player.x - PLAYER_SPEED, player.y)) {
+            }
             handleLeftArrow();
             lastDirection = 'left';
         }
     }
     if (keys['ArrowRight'] || keys['d']) {
         if (!checkCollision(player.x + PLAYER_SPEED, player.y)) {
+            if (!checkFight(player.x - PLAYER_SPEED, player.y)) {
+            }
             handleRightArrow();
             lastDirection = 'right';
         }
@@ -226,10 +234,22 @@ function checkCollision(x, y) {
     return willCollide;
 }
 
-// function checkFight(x, y) {
-//     let willFight = false;
-    
-// }
+function checkFight(x, y) {
+    let willFight = false;
+    ennemies.forEach(ennemy => {
+        if (ennemy.map == currentMapIndex + 1) {
+            if (
+                x-20 < ennemy.x + ennemy.size &&
+                x+20 > ennemy.x &&
+                y-20 < ennemy.y + ennemy.size &&
+                y+20 > ennemy.y
+            ) {
+                willFight = true;
+            }
+        }
+    });
+    return willFight;
+}
 
 // Event listener for movement keys
 const keys = {};
