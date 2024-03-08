@@ -1,7 +1,7 @@
 // Constants
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-const PLAYER_SIZE = 70;
+const PLAYER_SIZE = 90;
 const PLAYER_SPEED = 5;
 const MAP_WIDTH = 1200;
 const MAP_HEIGHT = 600;
@@ -24,7 +24,7 @@ const player = {
 // Ennemies
 const ennemy1 = {
     size: PLAYER_SIZE + 20,
-    character: "/assets/img/ennemy.png",
+    character: "/Survival-Jam-JS/assets/img/ennemy.png",
     x: 900,
     y: 300,
     map: 2,
@@ -36,7 +36,7 @@ const ennemy1 = {
 
 const ennemy2 = {
     size: PLAYER_SIZE + 20,
-    character: "/assets/img/ennemy.png",
+    character: "/Survival-Jam-JS/assets/img/ennemy.png",
     x: 900,
     y: 300,
     map: 3,
@@ -50,10 +50,10 @@ const ennemies = [ennemy1, ennemy2];
 
 // Maps
 const maps = [
-    { image: "/assets/img/map1.png" },
-    { image: "/assets/img/map2.png" },
-    { image: "/assets/img/map3.png" },
-    { image: "/assets/img/map4.png" }
+    { image: "/Survival-Jam-JS/assets/img/map.png" },
+    { image: "/Survival-Jam-JS/assets/img/map2.png" },
+    { image: "/Survival-Jam-JS/assets/img/map3.png" },
+    { image: "/Survival-Jam-JS/assets/img/map4.png" }
 ];
 let currentMapIndex = 0;
 
@@ -160,23 +160,23 @@ function update() {
 // Handle movement events
 function handleMovement(event) {
 
-    if (keys['ArrowUp']) {
+    if (keys['ArrowUp'] || keys['z']) {
         if (player.y - PLAYER_SPEED >= 0 && !checkCollision(player.x, player.y - PLAYER_SPEED)) {
             player.y -= PLAYER_SPEED;
         }
     } 
-    if (keys['ArrowDown']) {
+    if (keys['ArrowDown'] || keys['s']) {
         if (player.y + PLAYER_SPEED <= canvas.height && !checkCollision(player.x, player.y + PLAYER_SPEED)) {
             player.y += PLAYER_SPEED;
         }
     }
-    if (keys['ArrowLeft']) {
+    if (keys['ArrowLeft'] || keys['q']) {
         if (!checkCollision(player.x - PLAYER_SPEED, player.y)) {
             handleLeftArrow();
             lastDirection = 'left';
         }
     }
-    if (keys['ArrowRight']) {
+    if (keys['ArrowRight'] || keys['d']) {
         if (!checkCollision(player.x + PLAYER_SPEED, player.y)) {
             handleRightArrow();
             lastDirection = 'right';
