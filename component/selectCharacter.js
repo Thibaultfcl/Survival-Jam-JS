@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var modalWidth = 280;
     var modalHeight = 250;
     characterModal.style.left = canvasRect.left + (canvas.width - modalWidth) / 2 + "px";
-    characterModal.style.top = canvasRect.top + (canvas.height - modalHeight) / 2 + -50 + "px";
+    characterModal.style.top = canvasRect.top + (canvas.height - modalHeight) / 2 + "px";
 
     var character1Button = document.getElementById("character1");
     var character2Button = document.getElementById("character2");
@@ -51,12 +51,12 @@ document.addEventListener("DOMContentLoaded", function() {
     var confirmButton = document.getElementById("confirmButton");
 
     character1Button.addEventListener("click", function() {
-        selectedCharacter = "/assets/img/chevalier.png";
+        selectedCharacter = "/Survival-Jam-JS/assets/img/chevalier.png";
         characterPreview.src = selectedCharacter;
     });
 
     character2Button.addEventListener("click", function() {
-        selectedCharacter = "/assets/img/mage.png";
+        selectedCharacter = "/Survival-Jam-JS/assets/img/mage.png";
         characterPreview.src = selectedCharacter;
     });
 
