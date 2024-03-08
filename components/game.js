@@ -36,7 +36,7 @@ const ennemy1 = {
 
 const ennemy2 = {
     size: PLAYER_SIZE + 20,
-    character: "/Survival-Jam-JS/assets/img/ennemy.png",
+    character: "/assets/img/ennemy.png",
     x: 900,
     y: 300,
     map: 3,
@@ -50,10 +50,10 @@ const ennemies = [ennemy1, ennemy2];
 
 // Maps
 const maps = [
-    { image: "/Survival-Jam-JS/assets/img/map.png" },
-    { image: "/Survival-Jam-JS/assets/img/map2.png" },
-    { image: "/Survival-Jam-JS/assets/img/map3.png" },
-    { image: "/Survival-Jam-JS/assets/img/map4.png" }
+    { image: "/assets/img/map.png" },
+    { image: "/assets/img/map2.png" },
+    { image: "/assets/img/map3.png" },
+    { image: "/assets/img/map4.png" }
 ];
 let currentMapIndex = 0;
 
