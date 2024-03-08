@@ -51,12 +51,12 @@ document.addEventListener("DOMContentLoaded", function() {
     var confirmButton = document.getElementById("confirmButton");
 
     character1Button.addEventListener("click", function() {
-        selectedCharacter = "/assets/img/chevalier.png";
+        selectedCharacter = "/Survival-Jam-JS/assets/img/chevalier.png";
         characterPreview.src = selectedCharacter;
     });
 
     character2Button.addEventListener("click", function() {
-        selectedCharacter = "/assets/img/mage.png";
+        selectedCharacter = "/Survival-Jam-JS/assets/img/mage.png";
         characterPreview.src = selectedCharacter;
     });
 
