@@ -1,15 +1,76 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Defeat</title>
-        <link rel="stylesheet" href="/static/stylegame.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defaite</title>
+    <link rel="stylesheet" href="/Survival-Jam-JS/static/stylegame.css" />
+    <style>
+        body {
+            background-image: url('https://cdn.discordapp.com/attachments/1190789714270228612/1216078301387423985/IekGmH7AB-apdtvNG9LAT5Kw-Ou_DwnHChXgJqzH_nGn9Du-emL-fDK_jyp2NhAL-1XSio--TfTdzOLlcKyCJw3myNVSrv8OrPgTChM.png?ex=65ff142c&is=65ec9f2c&hm=83e9bc4d2e55ddaac47dbd4fe60eab7c173d8fded636ba11d5a814bb82869aee&');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .canvas {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8); /* Ajoute un fond semi-transparent pour une meilleure lisibilité du contenu */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #f72f2f;
+            font-size: 50px;
+        }
+
+        p {
+            color: #333;
+            font-size: 50px; /* Augmente la taille du texte */
+        }
+
+        .emoji {
+            font-size: 70px; /* Taille de l'emoji */
+            animation: rotateEmoji 2s infinite linear;
+        }
+
+        @keyframes rotateEmoji {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btnReturn {
+            background-color: #de3a31;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btnReturn:hover {
+            background-color: #000204;
+        }
+    </style>
+</head>
 <body>
-    <div class="Defaite">
-        <h1>Vous avez perdu!</h1>
-        <p>Veuillez réessayer</p>
+    <div class="canvas">
+        <h1>Vous avez Perduuu !</h1>
+        <p>Félicitations !! <span class="emoji">😞</span></p>
         <footer>
             <a href="/choixPerso.html">  
                 <button class="btnReturn">
