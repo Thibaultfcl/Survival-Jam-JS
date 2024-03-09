@@ -43,3 +43,10 @@ canvas {
   height: auto;
   margin-top: 20px;
 }
+
+.canvas {
+  display: block;
+  background-image: url('..assets/img/img victoire et defeat.jpg');
+  background-size: cover;
+}
+
