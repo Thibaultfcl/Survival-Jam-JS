@@ -15,6 +15,9 @@ body, html {
 
 canvas {
   border: 5px solid rgb(0, 0, 0);
+  background-image: url("../assets/img/unnamed.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .modal {
