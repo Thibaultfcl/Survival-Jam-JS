@@ -146,18 +146,22 @@ const keys = {
 window.addEventListener('keydown', (e) => {
     switch (e.key) {
         case 'z':
+        case 'Z':
         case 'ArrowUp':
             keys.z.presser = true;
             break;
         case 'q':
+        case 'Q':
         case 'ArrowLeft':
             keys.q.presser = true;
             break;
         case 's':
+        case 'S':
         case 'ArrowDown':
             keys.s.presser = true;
             break;
         case 'd':
+        case 'D':
         case 'ArrowRight':
             keys.d.presser = true;
             break;
@@ -167,18 +171,22 @@ window.addEventListener('keydown', (e) => {
 window.addEventListener('keyup', (e) => {
     switch (e.key) {
         case 'z':
+        case 'Z':
         case 'ArrowUp':
             keys.z.presser = false;
             break;
         case 'q':
+        case 'Q':
         case 'ArrowLeft':
             keys.q.presser = false;
             break;
         case 's':
+        case 'S':
         case 'ArrowDown':
             keys.s.presser = false;
             break;
         case 'd':
+        case 'D':
         case 'ArrowRight':
             keys.d.presser = false;
             break;
