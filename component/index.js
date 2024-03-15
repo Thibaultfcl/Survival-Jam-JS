@@ -27,6 +27,11 @@ playerRightImage.src = "./img/playerRight.png"
 const playerLeftImage = new Image()
 playerLeftImage.src = "./img/playerLeft.png"
 
+const ennemyImage = new Image()
+ennemyImage.src = "./img/ennemy.png"
+
+const ennemyImage2 = new Image()
+ennemyImage2.src = "./img/ennemy2.png"
 
 const player = new Sprite ({
     position: {
@@ -42,6 +47,21 @@ const player = new Sprite ({
         left: playerLeftImage,
         down: playerDownImage,
         right: playerRightImage,
+    }
+})
+
+const ennemy = new Sprite ({
+    position: {
+        x: 1200,
+        y: 80,
+    },
+    image: ennemyImage,
+    frames: {
+        max: 13,
+    },
+    sprites: {
+        left: ennemyImage,
+        right: ennemyImage2,
     }
 })
 
@@ -81,7 +101,23 @@ collisionMap.forEach((row, i) => {
     })
 })
 
-const movables = [background, ...boundaries, foreground]
+const ennemyBondaries = []
+ennemyBondaries.push(
+    new Boundary({
+        position: {
+            x: 1150,
+            y: 110
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 1900,
+            y: 110
+        }
+    })
+)
+
+const movables = [background, ...boundaries, foreground, ennemy, ...ennemyBondaries]
 
 function rectangleCollision({rectangle1, rectangle2}) {
     return (
@@ -149,6 +185,7 @@ window.addEventListener('keyup', (e) => {
     }
 });
 
+let mooveLeft = true
 function move() {
     window.requestAnimationFrame(move)
 
@@ -158,12 +195,62 @@ function move() {
         boundary.draw()
     })
 
+    ennemyBondaries.forEach((boundary) => {
+        boundary.draw()
+    })
+
     player.draw()
+
+    ennemy.draw()
 
     foreground.draw()
 
     let moving = true
     player.moving = false
+
+    if(
+        rectangleCollision({
+            rectangle1: player,
+            rectangle2: ennemy
+        })
+    ) {
+        console.log("colision")
+    }
+
+    ennemy.moving = true
+    if(
+        rectangleCollision({
+            rectangle1: ennemy,
+            rectangle2: {
+                ...ennemyBondaries[0],
+                position: {
+                x: ennemyBondaries[0].position.x + 0.5,
+                y: ennemyBondaries[0].position.y
+            }}
+        })
+    ) {
+        mooveLeft = true
+    } else if (
+        rectangleCollision({
+            rectangle1: ennemy,
+            rectangle2: {
+                ...ennemyBondaries[1],
+                position: {
+                x: ennemyBondaries[1].position.x,
+                y: ennemyBondaries[1].position.y
+            }}
+        })
+    ) {
+        mooveLeft = false
+    }
+
+    if (mooveLeft) {
+        ennemy.image = ennemy.sprites.left
+        ennemy.position.x += 0.5
+    } else {
+        ennemy.image = ennemy.sprites.right
+        ennemy.position.x -= 0.5
+    }
 
     if (keys.z.presser) {
         player.moving = true
