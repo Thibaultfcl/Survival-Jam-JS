@@ -193,60 +193,57 @@ window.addEventListener('keyup', (e) => {
     }
 });
 
+const battle = {
+    initiated : false
+}
+
 let mooveLeft = true
 function move() {
-    window.requestAnimationFrame(move)
+    animationID = window.requestAnimationFrame(move)
 
+    //draw elements
     background.draw()
-
     boundaries.forEach((boundary) => {
         boundary.draw()
     })
-
     ennemyBondaries.forEach((boundary) => {
         boundary.draw()
     })
-
     player.draw()
-
     ennemy.draw()
-
     foreground.draw()
 
     let moving = true
     player.moving = false
+    ennemy.moving = false
 
+    //battle
+    if (battle.initiated) return
     if(
         rectangleCollision({
             rectangle1: player,
             rectangle2: ennemy
         })
     ) {
-        console.log("colision")
+        window.cancelAnimationFrame(animationID)
+        battle.initiated = true
+        document.getElementById('transitionDiv').classList.add('show-transition');
+        animateBattle()
     }
 
+    //ennemy movement
     ennemy.moving = true
     if(
         rectangleCollision({
             rectangle1: ennemy,
-            rectangle2: {
-                ...ennemyBondaries[0],
-                position: {
-                x: ennemyBondaries[0].position.x + 0.5,
-                y: ennemyBondaries[0].position.y
-            }}
+            rectangle2: ennemyBondaries[0]
         })
     ) {
         mooveLeft = true
     } else if (
         rectangleCollision({
             rectangle1: ennemy,
-            rectangle2: {
-                ...ennemyBondaries[1],
-                position: {
-                x: ennemyBondaries[1].position.x,
-                y: ennemyBondaries[1].position.y
-            }}
+            rectangle2: ennemyBondaries[1]
         })
     ) {
         mooveLeft = false
@@ -260,6 +257,7 @@ function move() {
         ennemy.position.x -= 0.5
     }
 
+    //player movement
     if (keys.z.presser) {
         player.moving = true
         player.image = player.sprites.up
