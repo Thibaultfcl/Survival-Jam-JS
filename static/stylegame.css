@@ -79,3 +79,16 @@ canvas {
     opacity: 1;
   }
 }
+
+.hide-transition {
+  animation: fadeTransition 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeTransition {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
