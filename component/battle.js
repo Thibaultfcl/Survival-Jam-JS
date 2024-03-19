@@ -20,6 +20,7 @@ const ennemyBattle = new Sprite({
     image: ennemyImgBattle,
     frames: {
         max: 11,
+        hold: 20
     },
     animate: true
 })

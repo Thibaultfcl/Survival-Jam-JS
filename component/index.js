@@ -5,8 +5,8 @@ canvas.width = 1024
 canvas.height = 576
 
 const offset = {
-    x: -425,
-    y: -850
+    x: -450,
+    y: -800
 }
 
 const image = new Image()
@@ -41,6 +41,7 @@ const player = new Sprite ({
     image: playerDownImage,
     frames: {
         max: 4,
+        hold: 20
     },
     sprites: {
         up: playerUpImage,
@@ -58,6 +59,7 @@ const ennemy = new Sprite ({
     image: ennemyImage,
     frames: {
         max: 13,
+        hold: 10
     },
     sprites: {
         left: ennemyImage,
@@ -368,4 +370,4 @@ function move() {
         }
     }
 }
-animateBattle()
+move()
