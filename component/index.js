@@ -33,6 +33,9 @@ ennemyImage.src = "./img/ennemy.png"
 const ennemyImage2 = new Image()
 ennemyImage2.src = "./img/ennemy2.png"
 
+// const battleBackgroundImage = new Image()
+// battleBackgroundImage.src = './img/bg_14.png'
+
 const player = new Sprite ({
     position: {
         x: canvas.width / 2 -  192 / 4 / 2,
@@ -80,6 +83,14 @@ const foreground = new Sprite({
     },
     image: foregroundImage
 })
+
+// const battleBackground = new Sprite({
+//     position: {
+//         x: 0,
+//         y: 0
+//     },
+//     image: battleBackgroundImage
+// })
 
 const collisionMap = []
 for (let i = 0; i < collision.length; i += 70) {
@@ -192,6 +203,12 @@ window.addEventListener('keyup', (e) => {
             break;
     }
 });
+
+// function animateBattle() {
+//     window.requestAnimationFrame(animateBattle)
+//     console.log('esg')
+//     battleBackground.draw
+// }
 
 const battle = {
     initiated : false

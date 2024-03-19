@@ -15,9 +15,6 @@ body, html {
 
 canvas {
   border: 5px solid rgb(0, 0, 0);
-  background-image: url("../assets/img/unnamed.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
 .modal {
@@ -59,7 +56,7 @@ canvas {
 }
 
 .show-transition {
-  animation: fadeInOut 0.8s ease-in-out forwards;
+  animation: fadeInOut 1.5s ease-in-out forwards;
 }
 
 @keyframes fadeInOut {
