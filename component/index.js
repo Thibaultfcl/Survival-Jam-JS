@@ -5,8 +5,8 @@ canvas.width = 1024
 canvas.height = 576
 
 const offset = {
-    x: -425,
-    y: -850
+    x: -450,
+    y: -800
 }
 
 const image = new Image()
@@ -41,6 +41,7 @@ const player = new Sprite ({
     image: playerDownImage,
     frames: {
         max: 4,
+        hold: 20
     },
     sprites: {
         up: playerUpImage,
@@ -58,11 +59,13 @@ const ennemy = new Sprite ({
     image: ennemyImage,
     frames: {
         max: 13,
+        hold: 10
     },
     sprites: {
         left: ennemyImage,
         right: ennemyImage2,
-    }
+    },
+    animate: true
 })
 
 const background = new Sprite({
@@ -152,16 +155,16 @@ function rectangleCollision({rectangle1, rectangle2}) {
 
 const keys = {
     z: {
-        presser: false
+        pressed: false
     },
     q: {
-        presser: false
+        pressed: false
     },
     s: {
-        presser: false
+        pressed: false
     },
     d: {
-        presser: false
+        pressed: false
     },
 }
 
@@ -170,22 +173,22 @@ window.addEventListener('keydown', (e) => {
         case 'z':
         case 'Z':
         case 'ArrowUp':
-            keys.z.presser = true;
+            keys.z.pressed = true;
             break;
         case 'q':
         case 'Q':
         case 'ArrowLeft':
-            keys.q.presser = true;
+            keys.q.pressed = true;
             break;
         case 's':
         case 'S':
         case 'ArrowDown':
-            keys.s.presser = true;
+            keys.s.pressed = true;
             break;
         case 'd':
         case 'D':
         case 'ArrowRight':
-            keys.d.presser = true;
+            keys.d.pressed = true;
             break;
     }
 });
@@ -195,22 +198,22 @@ window.addEventListener('keyup', (e) => {
         case 'z':
         case 'Z':
         case 'ArrowUp':
-            keys.z.presser = false;
+            keys.z.pressed = false;
             break;
         case 'q':
         case 'Q':
         case 'ArrowLeft':
-            keys.q.presser = false;
+            keys.q.pressed = false;
             break;
         case 's':
         case 'S':
         case 'ArrowDown':
-            keys.s.presser = false;
+            keys.s.pressed = false;
             break;
         case 'd':
         case 'D':
         case 'ArrowRight':
-            keys.d.presser = false;
+            keys.d.pressed = false;
             break;
     }
 });
@@ -252,8 +255,7 @@ function move() {
     foreground.draw()
 
     let moving = true
-    player.moving = false
-    ennemy.moving = false
+    player.animate = false
 
     //battle
     if (battle.initiated) return
@@ -269,11 +271,12 @@ function move() {
         // audio.Battle.play()
         battle.initiated = true
         document.getElementById('transitionDiv').classList.add('show-transition');
-        animateBattle()
+        document.getElementById('transitionDiv').addEventListener('animationend', function() {
+            animateBattle();
+        }, { once: true });
     }
 
     //ennemy movement
-    ennemy.moving = true
     if(
         rectangleCollision({
             rectangle1: ennemy,
@@ -310,8 +313,8 @@ function move() {
     
 
     //player movement
-    if (keys.z.presser) {
-        player.moving = true
+    if (keys.z.pressed) {
+        player.animate = true
         player.image = player.sprites.up
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
@@ -337,8 +340,8 @@ function move() {
             })
         }
 
-    } else if (keys.q.presser) {
-        player.moving = true
+    } else if (keys.q.pressed) {
+        player.animate = true
         player.image = player.sprites.left
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
@@ -364,8 +367,8 @@ function move() {
             })
         }
 
-    } else if (keys.s.presser) {
-        player.moving = true
+    } else if (keys.s.pressed) {
+        player.animate = true
         player.image = player.sprites.down
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
@@ -391,8 +394,8 @@ function move() {
             })
         }
 
-    } else if (keys.d.presser) {
-        player.moving = true
+    } else if (keys.d.pressed) {
+        player.animate = true
         player.image = player.sprites.right
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
