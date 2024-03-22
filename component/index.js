@@ -117,7 +117,29 @@ ennemyBondaries.push(
     })
 )
 
-const movables = [background, ...boundaries, foreground, ennemy, ...ennemyBondaries]
+const passage_map = []
+passage_map.push(
+    new Boundary({
+        position: {
+            x: 2400,
+            y: 62
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 2400,
+            y: 160
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 2400,
+            y: 115
+        }
+    })
+)
+
+const movables = [background, ...boundaries, foreground, ennemy, ...ennemyBondaries, ...passage_map]
 
 function rectangleCollision({rectangle1, rectangle2}) {
     return (
@@ -197,6 +219,18 @@ const battle = {
     initiated : false
 }
 
+//music
+let audioStarted = false;
+
+function startAudio() {
+    if (!audioStarted) {
+        audio.Map.play();
+        audioStarted = true;
+    }
+}
+
+addEventListener('click', startAudio);
+
 let mooveLeft = true
 function move() {
     animationID = window.requestAnimationFrame(move)
@@ -209,6 +243,10 @@ function move() {
     ennemyBondaries.forEach((boundary) => {
         boundary.draw()
     })
+    passage_map.forEach((boundary) => {
+        boundary.draw()
+    })
+
     player.draw()
     ennemy.draw()
     foreground.draw()
@@ -226,6 +264,9 @@ function move() {
         })
     ) {
         window.cancelAnimationFrame(animationID)
+        audio.Map.stop()
+        audio.Transibattle.play()
+        // audio.Battle.play()
         battle.initiated = true
         document.getElementById('transitionDiv').classList.add('show-transition');
         animateBattle()
@@ -256,6 +297,17 @@ function move() {
         ennemy.image = ennemy.sprites.right
         ennemy.position.x -= 0.5
     }
+
+    if(
+        rectangleCollision({
+            rectangle1: player,
+            rectangle2: passage_map[0]
+        })
+    ) {
+        mooveLeft = true
+    }
+
+    
 
     //player movement
     if (keys.z.presser) {
