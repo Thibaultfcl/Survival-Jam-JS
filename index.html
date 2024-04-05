@@ -37,10 +37,8 @@
             width: 100%;
           "
         >
-          <button>Attack</button>
-          <button>Attack</button>
-          <button>Attack</button>
-          <button>Attack</button>
+          <button id="tackleButton" style="font-size: 25px;">Tackle</button>
+          <button id="Attack2Button" style="font-size: 25px;">Attack2</button>
         </div>
       </div>
 
@@ -60,9 +58,10 @@
         <h1 style="font-size: 16px;">Player</h1>
         <div style="position: relative;">
           <div style="height: 5px; background-color: #aaa; margin-top: 10px;"></div>
-          <div style="height: 5px; background-color: green; position: absolute; top: 0; left: 0; right: 0;"></div>
+          <div id="playerHealthBar" style="height: 5px; background-color: green; position: absolute; top: 0; left: 0; right: 0;"></div>
         </div>
       </div>
+
        <!-- health bar of the ennemy -->
       <div
         style="
@@ -79,7 +78,7 @@
         <h1 style="font-size: 16px;">Ennemy</h1>
         <div style="position: relative;">
           <div style="height: 5px; background-color: #aaa; margin-top: 10px;"></div>
-          <div style="height: 5px; background-color: green; position: absolute; top: 0; left: 0; right: 0;"></div>
+          <div id="ennemyHealthBar" style="height: 5px; background-color: green; position: absolute; top: 0; left: 0; right: 0;"></div>
         </div>
       </div>
       <canvas></canvas>

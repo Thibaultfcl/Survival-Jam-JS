@@ -10,9 +10,13 @@ class Sprite {
         }
         this.animate = animate
         this.sprites = sprites
+        this.opacity = 1
+        this.health = 100
     }
 
     draw() {
+        c.save()
+        c.globalAlpha = this.opacity
         c.drawImage(
             this.image,
             this.frames.val * this.width,
@@ -24,6 +28,7 @@ class Sprite {
             this.image.width / this.frames.max, 
             this.image.height
         )
+        c.restore
 
         if (!this.animate) {
             return
@@ -40,6 +45,26 @@ class Sprite {
                 this.frames.val = 0
             }
         }
+    }
+
+    attack({ attack, target}) {
+        const retreatDuration = 0.1;
+        const attackDuration = 0.08;
+        const numRetreatRepeats = 5;
+
+        setTimeout(() => {
+            target.health -= attack.damage
+            console.log(target.health)
+            document.getElementById('ennemyHealthBar').style.width = `${target.health}%`;
+            let retreatCounter = 0;
+            let retreatInterval = setInterval(() => {
+                target.opacity = (retreatCounter % 2 === 0) ? 0 : 1;
+                retreatCounter++;
+                if (retreatCounter >= numRetreatRepeats * 2) {
+                    clearInterval(retreatInterval);
+                }
+            }, attackDuration * 1000);
+        }, retreatDuration * 1000);
     }
 }
 

@@ -43,3 +43,16 @@ function animateBattle() {
     ennemyBattle.draw()
     playerBattle.draw()
 }
+
+document.getElementById('tackleButton').addEventListener('click', (event) => {
+    const clickedButton = event.target;
+    if (clickedButton.tagName === 'BUTTON') {
+        player.attack({
+            attack: {
+                name: 'Tackle',
+                damage: 10,
+            },
+            target: ennemyBattle
+        });
+    }
+});
