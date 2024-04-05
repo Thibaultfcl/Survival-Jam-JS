@@ -25,7 +25,8 @@ const ennemyBattle = new Sprite({
         max: 11,
         hold: 20
     },
-    animate: true
+    animate: true,
+    isEnnemy: true
 })
 
 const playerBattle = new Sprite({
@@ -45,15 +46,46 @@ function animateBattle() {
     document.getElementById('battleElements').style.display = 'block';
 }
 
+function moveElementAnimated(element, deltaX, duration) {
+    return new Promise((resolve, _) => {
+        const fps = 60; // Frames per second
+        const frames = duration * fps / 1000; // Total number of frames
+        const intervalTime = duration / frames; // Time between each frame
+    
+        let currentFrame = 0;
+        const interval = setInterval(() => {
+            if (currentFrame >= frames) {
+                clearInterval(interval);
+                resolve();
+                return;
+            }
+    
+            const progress = currentFrame / frames;
+            const moveAmount = deltaX * progress;
+    
+            element.position.x += moveAmount;
+    
+            currentFrame++;
+        }, intervalTime);
+    });
+}
+
 document.getElementById('tackleButton').addEventListener('click', (event) => {
     const clickedButton = event.target;
     if (clickedButton.tagName === 'BUTTON') {
-        player.attack({
-            attack: {
-                name: 'Tackle',
-                damage: 10,
-            },
-            target: ennemyBattle
-        });
+        moveElementAnimated(playerBattle, -2, 750)
+        .then(() => {
+            return moveElementAnimated(playerBattle, +6, 500);
+        })
+        .then(() => {
+            playerBattle.attack({
+                attack: {
+                    name: 'Tackle',
+                    damage: 10,
+                },
+                target: ennemyBattle
+            });
+            return moveElementAnimated(playerBattle, -2, 750);
+        })
     }
 });

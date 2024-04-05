@@ -1,5 +1,5 @@
 class Sprite {
-    constructor({position, image, frames = {max: 1, hold: 10}, sprites, animate = false}) {
+    constructor({position, image, frames = {max: 1, hold: 10}, sprites, animate = false, health = 100, isEnnemy = false}) {
         this.position = position
         this.image = image
         this.frames = {...frames, val: 0, elapsed: 0}
@@ -11,7 +11,8 @@ class Sprite {
         this.animate = animate
         this.sprites = sprites
         this.opacity = 1
-        this.health = 100
+        this.health = health
+        this.isEnnemy = isEnnemy
     }
 
     draw() {
@@ -52,15 +53,18 @@ class Sprite {
         const attackDuration = 0.08;
         const numRetreatRepeats = 5;
 
+        let healthBar = 'ennemyHealthBar'
+        if (this.isEnnemy) healthBar = 'playerHealthBar'
+
         setTimeout(() => {
             target.health -= attack.damage
-            console.log(target.health)
-            document.getElementById('ennemyHealthBar').style.width = `${target.health}%`;
+            document.getElementById(healthBar).style.width = `${target.health}%`;
             let retreatCounter = 0;
             let retreatInterval = setInterval(() => {
                 target.opacity = (retreatCounter % 2 === 0) ? 0 : 1;
                 retreatCounter++;
                 if (retreatCounter >= numRetreatRepeats * 2) {
+                    if (target.health <= 0) target.opacity = 0;
                     clearInterval(retreatInterval);
                 }
             }, attackDuration * 1000);
