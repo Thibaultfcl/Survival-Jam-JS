@@ -5,8 +5,8 @@ canvas.width = 1024
 canvas.height = 576
 
 const offset = {
-    x: -450,
-    y: -800
+    x: -425,
+    y: -850
 }
 
 const image = new Image()
@@ -370,4 +370,4 @@ function move() {
         }
     }
 }
-move()
+animateBattle()

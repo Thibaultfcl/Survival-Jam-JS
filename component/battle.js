@@ -4,6 +4,9 @@ battleBackgroundImage.src = './img/bg.png'
 const ennemyImgBattle = new Image()
 ennemyImgBattle.src = './img/skeletonIdle.png'
 
+const playerImgBattle = new Image()
+playerImgBattle.src = './img/playerRightBattle.png'
+
 const battleBackground = new Sprite({
     position: {
         x: -200,
@@ -25,9 +28,18 @@ const ennemyBattle = new Sprite({
     animate: true
 })
 
+const playerBattle = new Sprite({
+    position: {
+        x: 200,
+        y: 375
+    },
+    image: playerImgBattle
+})
+
 function animateBattle() {
     window.requestAnimationFrame(animateBattle)
     document.getElementById('transitionDiv').classList.add('hide-transition');
     battleBackground.draw()
     ennemyBattle.draw()
+    playerBattle.draw()
 }
