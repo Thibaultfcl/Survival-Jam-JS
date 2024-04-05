@@ -121,25 +121,35 @@ const passage_map = []
 passage_map.push(
     new Boundary({
         position: {
-            x: 2400,
+            x: 2420,
             y: 62
         }
     }),
     new Boundary({
         position: {
-            x: 2400,
-            y: 160
+            x: 2420,
+            y: 155
         }
     }),
     new Boundary({
         position: {
-            x: 2400,
+            x: 2420,
             y: 112
         }
     })
 )
 
-const movables = [background, ...boundaries, foreground, ennemy, ...ennemyBondaries, ...passage_map]
+const passage_map2 = []
+passage_map2.push(
+    new Boundary({
+        position: {
+            x: 2500,
+            y: 112
+        }
+    })
+)
+
+const movables = [background, ...boundaries, foreground, ennemy, ...ennemyBondaries, ...passage_map, passage_map2]
 
 function rectangleCollision({rectangle1, rectangle2}) {
     return (
@@ -248,6 +258,9 @@ function move() {
     passage_map.forEach((boundary) => {
         boundary.draw()
     })
+    passage_map2.forEach((boundary) => {
+        boundary.draw()
+    })
     player.draw()
     ennemy.draw()
     foreground.draw()
@@ -271,7 +284,9 @@ function move() {
         // audio.Battle.play()
         battle.initiated = true
         document.getElementById('transitionDiv').classList.add('show-transition');
-        animateBattle()
+        document.getElementById('transitionDiv').addEventListener('animationend', function() {
+            animateBattle();
+        }, { once: true });
     }
 
     //ennemy movement
@@ -297,7 +312,14 @@ function move() {
         })
     ) {
         mooveLeft = false
-    } 
+    } else if (
+        rectangleCollision({
+            rectangle1: player,
+            rectangle2: passage_map2[0]
+        })
+    ) {
+        mooveLeft = false
+    }
 
     if (mooveLeft) {
         ennemy.image = ennemy.sprites.left
@@ -441,16 +463,38 @@ function move() {
             // Logique de déplacement du joueur vers la droite
             player.position.x += 5;
         }
-        
-        // Assurez-vous que le joueur ne peut pas traverser les limites
-        boundaries.forEach((boundary) => {
-            if (rectangleCollision({ rectangle1: player, rectangle2: boundary })) {
-                // Annulez le mouvement si une collision est détectée
-                player.position.x = player.previousPosition.x;
-                player.position.y = player.previousPosition.y;
+    }
+
+    // Vérifiez si le joueur a traversé la constante passage_map
+    if (!crossedPassage) {
+        for (let i = 0; i < passage_map.length; i++) {
+            if (rectangleCollision({ rectangle1: player, rectangle2: passage_map[i] })) {
+                crossedPassage = true;
+                break;
             }
-        });
+        }
+    } else {
+        // Le joueur a traversé passage_map, donc déplacement automatique vers passage_map2
+        const destinationX = 1200; // Position x de passage_map2
+        const destinationY = 250; // Position y de passage_map2
+        const speed = 2; // Vitesse de déplacement du joueur
+        
+        // Calculer la direction du déplacement
+        const dx = destinationX - player.position.x;
+        const dy = destinationY - player.position.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const vx = (dx / distance) * speed;
+        const vy = (dy / distance) * speed;
+
+        // Déplacer le joueur vers la destination
+        player.position.x += vx;
+        player.position.y += vy;
+        // Vérifier si le joueur est arrivé à la destination
+        if (Math.abs(player.position.x - destinationX) < speed && Math.abs(player.position.y - destinationY) < speed) {
+            // Le joueur est arrivé à la destination, lancer la cinématique
+            window.cancelAnimationFrame(animationID);
+            lancerCinematique();
+        }
     }
 }
-
-move();
+move()
