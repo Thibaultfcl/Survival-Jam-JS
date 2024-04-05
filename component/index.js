@@ -370,4 +370,4 @@ function move() {
         }
     }
 }
-animateBattle()
+move()

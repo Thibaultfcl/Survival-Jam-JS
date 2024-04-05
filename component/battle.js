@@ -42,6 +42,7 @@ function animateBattle() {
     battleBackground.draw()
     ennemyBattle.draw()
     playerBattle.draw()
+    document.getElementById('battleElements').style.display = 'block';
 }
 
 document.getElementById('tackleButton').addEventListener('click', (event) => {

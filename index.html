@@ -16,69 +16,96 @@
   <body>
     <div style="display: inline-block; position: relative">
       <div id="transitionDiv" class="transition"></div>
-      <!-- battle -->
-      <div
-        style="
-          background-color: rgba(255, 255, 255, 0.7);
-          height: 180px;
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          border: 5px solid rgb(0, 0, 0);
-          display: flex;
-        "
-      >
-        <!-- attack button -->
+
+      <div id="battleElements" style="display: none">
+        <!-- battle -->
         <div
           style="
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            width: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            height: 180px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            border: 5px solid rgb(0, 0, 0);
+            display: flex;
           "
         >
-          <button id="tackleButton" style="font-size: 25px;">Tackle</button>
-          <button id="Attack2Button" style="font-size: 25px;">Attack2</button>
+          <!-- attack button -->
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              width: 100%;
+            "
+          >
+            <button id="tackleButton" style="font-size: 25px">Tackle</button>
+            <button id="Attack2Button" style="font-size: 25px">Attack2</button>
+          </div>
         </div>
-      </div>
 
-      <!-- health bar of the player -->
-      <div
-        style="
-          background-color: rgba(255, 255, 255, 0.7);
-          width: 200px;
-          position: absolute;
-          top: 250px;
-          left: 150px;
-          border: 3px solid black;
-          padding: 12px;
-          text-align: center;
-        "
-      >
-        <h1 style="font-size: 16px;">Player</h1>
-        <div style="position: relative;">
-          <div style="height: 5px; background-color: #aaa; margin-top: 10px;"></div>
-          <div id="playerHealthBar" style="height: 5px; background-color: green; position: absolute; top: 0; left: 0; right: 0;"></div>
+        <!-- health bar of the player -->
+        <div
+          style="
+            background-color: rgba(255, 255, 255, 0.7);
+            width: 200px;
+            position: absolute;
+            top: 250px;
+            left: 150px;
+            border: 3px solid black;
+            padding: 12px;
+            text-align: center;
+          "
+        >
+          <h1 style="font-size: 16px">Player</h1>
+          <div style="position: relative">
+            <div
+              style="height: 5px; background-color: #aaa; margin-top: 10px"
+            ></div>
+            <div
+              id="playerHealthBar"
+              style="
+                height: 5px;
+                background-color: green;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+              "
+            ></div>
+          </div>
         </div>
-      </div>
 
-       <!-- health bar of the ennemy -->
-      <div
-        style="
-          background-color: rgba(255, 255, 255, 0.7);
-          width: 200px;
-          position: absolute;
-          top: 250px;
-          left: 650px;
-          border: 3px solid black;
-          padding: 12px;
-          text-align: center;
-        "
-      >
-        <h1 style="font-size: 16px;">Ennemy</h1>
-        <div style="position: relative;">
-          <div style="height: 5px; background-color: #aaa; margin-top: 10px;"></div>
-          <div id="ennemyHealthBar" style="height: 5px; background-color: green; position: absolute; top: 0; left: 0; right: 0;"></div>
+        <!-- health bar of the ennemy -->
+        <div
+          style="
+            background-color: rgba(255, 255, 255, 0.7);
+            width: 200px;
+            position: absolute;
+            top: 250px;
+            left: 650px;
+            border: 3px solid black;
+            padding: 12px;
+            text-align: center;
+          "
+        >
+          <h1 style="font-size: 16px">Ennemy</h1>
+          <div style="position: relative">
+            <div
+              style="height: 5px; background-color: #aaa; margin-top: 10px"
+            ></div>
+            <div
+              id="ennemyHealthBar"
+              style="
+                height: 5px;
+                background-color: green;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+              "
+            ></div>
+          </div>
         </div>
       </div>
       <canvas></canvas>
