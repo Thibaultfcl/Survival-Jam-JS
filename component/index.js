@@ -5,8 +5,8 @@ canvas.width = 1024
 canvas.height = 576
 
 const offset = {
-    x: -450,
-    y: -800
+    x: -425,
+    y: -850
 }
 
 const image = new Image()
@@ -41,7 +41,6 @@ const player = new Sprite ({
     image: playerDownImage,
     frames: {
         max: 4,
-        hold: 20
     },
     sprites: {
         up: playerUpImage,
@@ -59,13 +58,11 @@ const ennemy = new Sprite ({
     image: ennemyImage,
     frames: {
         max: 13,
-        hold: 10
     },
     sprites: {
         left: ennemyImage,
         right: ennemyImage2,
-    },
-    animate: true
+    }
 })
 
 const background = new Sprite({
@@ -137,7 +134,7 @@ passage_map.push(
     new Boundary({
         position: {
             x: 2400,
-            y: 115
+            y: 112
         }
     })
 )
@@ -155,16 +152,16 @@ function rectangleCollision({rectangle1, rectangle2}) {
 
 const keys = {
     z: {
-        pressed: false
+        presser: false
     },
     q: {
-        pressed: false
+        presser: false
     },
     s: {
-        pressed: false
+        presser: false
     },
     d: {
-        pressed: false
+        presser: false
     },
 }
 
@@ -173,22 +170,22 @@ window.addEventListener('keydown', (e) => {
         case 'z':
         case 'Z':
         case 'ArrowUp':
-            keys.z.pressed = true;
+            keys.z.presser = true;
             break;
         case 'q':
         case 'Q':
         case 'ArrowLeft':
-            keys.q.pressed = true;
+            keys.q.presser = true;
             break;
         case 's':
         case 'S':
         case 'ArrowDown':
-            keys.s.pressed = true;
+            keys.s.presser = true;
             break;
         case 'd':
         case 'D':
         case 'ArrowRight':
-            keys.d.pressed = true;
+            keys.d.presser = true;
             break;
     }
 });
@@ -198,22 +195,22 @@ window.addEventListener('keyup', (e) => {
         case 'z':
         case 'Z':
         case 'ArrowUp':
-            keys.z.pressed = false;
+            keys.z.presser = false;
             break;
         case 'q':
         case 'Q':
         case 'ArrowLeft':
-            keys.q.pressed = false;
+            keys.q.presser = false;
             break;
         case 's':
         case 'S':
         case 'ArrowDown':
-            keys.s.pressed = false;
+            keys.s.presser = false;
             break;
         case 'd':
         case 'D':
         case 'ArrowRight':
-            keys.d.pressed = false;
+            keys.d.presser = false;
             break;
     }
 });
@@ -249,13 +246,14 @@ function move() {
     passage_map.forEach((boundary) => {
         boundary.draw()
     })
-
     player.draw()
     ennemy.draw()
     foreground.draw()
 
     let moving = true
-    player.animate = false
+    player.moving = false
+    ennemy.moving = false
+    
 
     //battle
     if (battle.initiated) return
@@ -271,12 +269,11 @@ function move() {
         // audio.Battle.play()
         battle.initiated = true
         document.getElementById('transitionDiv').classList.add('show-transition');
-        document.getElementById('transitionDiv').addEventListener('animationend', function() {
-            animateBattle();
-        }, { once: true });
+        animateBattle()
     }
 
     //ennemy movement
+    ennemy.moving = true
     if(
         rectangleCollision({
             rectangle1: ennemy,
@@ -291,7 +288,14 @@ function move() {
         })
     ) {
         mooveLeft = false
-    }
+    } else if (
+        rectangleCollision({
+            rectangle1: player,
+            rectangle2: passage_map[0]
+        })
+    ) {
+        mooveLeft = false
+    } 
 
     if (mooveLeft) {
         ennemy.image = ennemy.sprites.left
@@ -301,20 +305,10 @@ function move() {
         ennemy.position.x -= 0.5
     }
 
-    if(
-        rectangleCollision({
-            rectangle1: player,
-            rectangle2: passage_map[0]
-        })
-    ) {
-        mooveLeft = true
-    }
-
     
-
     //player movement
-    if (keys.z.pressed) {
-        player.animate = true
+    if (keys.z.presser) {
+        player.moving = true
         player.image = player.sprites.up
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
@@ -340,8 +334,8 @@ function move() {
             })
         }
 
-    } else if (keys.q.pressed) {
-        player.animate = true
+    } else if (keys.q.presser) {
+        player.moving = true
         player.image = player.sprites.left
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
@@ -367,8 +361,8 @@ function move() {
             })
         }
 
-    } else if (keys.s.pressed) {
-        player.animate = true
+    } else if (keys.s.presser) {
+        player.moving = true
         player.image = player.sprites.down
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
@@ -394,8 +388,8 @@ function move() {
             })
         }
 
-    } else if (keys.d.pressed) {
-        player.animate = true
+    } else if (keys.d.presser) {
+        player.moving = true
         player.image = player.sprites.right
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
