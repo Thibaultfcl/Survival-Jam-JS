@@ -7,6 +7,9 @@ ennemyImgBattle.src = './img/skeletonIdle.png'
 const playerImgBattle = new Image()
 playerImgBattle.src = './img/playerRightBattle.png'
 
+const shieldImg = new Image()
+shieldImg.src = './img/shield.png'
+
 const battleBackground = new Sprite({
     position: {
         x: -200,
@@ -37,6 +40,17 @@ const playerBattle = new Sprite({
     image: playerImgBattle
 })
 
+const shield = new Sprite({
+    position: {
+        x: 85,
+        y: 250
+    },
+    image: shieldImg
+})
+
+const playerWithSpells = [playerBattle, shield]
+let shieldActivated = false
+
 function animateBattle() {
     window.requestAnimationFrame(animateBattle)
     document.getElementById('transitionDiv').classList.add('hide-transition');
@@ -44,9 +58,11 @@ function animateBattle() {
     ennemyBattle.draw()
     playerBattle.draw()
     document.getElementById('battleElements').style.display = 'block';
+
+    if (shieldActivated) shield.draw()
 }
 
-function moveElementAnimated(element, deltaX, duration) {
+function moveElementAnimated(elements, deltaX, duration) {
     return new Promise((resolve, _) => {
         const fps = 60; // Frames per second
         const frames = duration * fps / 1000; // Total number of frames
@@ -63,19 +79,33 @@ function moveElementAnimated(element, deltaX, duration) {
             const progress = currentFrame / frames;
             const moveAmount = deltaX * progress;
     
-            element.position.x += moveAmount;
-    
+            elements.forEach(element => {
+                element.position.x += moveAmount;
+            });
+            
             currentFrame++;
         }, intervalTime);
     });
 }
 
-document.getElementById('tackleButton').addEventListener('click', (event) => {
+document.getElementById('Attack1Button').addEventListener('click', (event) => {
     const clickedButton = event.target;
     if (clickedButton.tagName === 'BUTTON') {
-        moveElementAnimated(playerBattle, -2, 750)
+        Tackle();
+    }
+});
+
+document.getElementById('Attack2Button').addEventListener('click', (event) => {
+    const clickedButton = event.target;
+    if (clickedButton.tagName === 'BUTTON') {
+        Shield();
+    }
+});
+
+function Tackle() {
+    moveElementAnimated(playerWithSpells, -2, 750)
         .then(() => {
-            return moveElementAnimated(playerBattle, +6, 500);
+            return moveElementAnimated(playerWithSpells, +6, 500);
         })
         .then(() => {
             playerBattle.attack({
@@ -85,7 +115,10 @@ document.getElementById('tackleButton').addEventListener('click', (event) => {
                 },
                 target: ennemyBattle
             });
-            return moveElementAnimated(playerBattle, -2, 750);
+            return moveElementAnimated(playerWithSpells, -2, 750);
         })
-    }
-});
+}
+
+function Shield() {
+    shieldActivated = true
+}
