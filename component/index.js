@@ -501,7 +501,7 @@ function FirstMap() {
         if (Math.abs(player.position.x - destinationX) < speed && Math.abs(player.position.y - destinationY) < speed) {
             // Le joueur est arrivé à la destination, lancer la cinématique
             window.cancelAnimationFrame(animationID);
-            SecondeMap();
+            SecondMap();
             // TroisiemeMap();
         }
         // Empêcher les mouvements du joueur via les touches du clavier
@@ -513,14 +513,54 @@ function FirstMap() {
 }
 FirstMap();
 
-function SecondeMap() {
-
-    let moving = true;
+function SecondMap() {
+    // Initialisation des variables de mouvement
     player.moving = false;
-    ennemy.moving = false;
-    // Changer la source de l'image pour la deuxième carte
+
+    // Chargement de l'image de la carte
     background2.image.src = "./img/CarteJS.png";
 
+    const center_cam = [];
+    center_cam.push(
+        new Boundary({
+            position: {
+                x: 470,
+                y: 270
+            }
+        }),
+        new Boundary({
+            position: {
+                x: 470,
+                y: 320
+            }
+        }),
+        new Boundary({
+            position: {
+                x: 470,
+                y: 370
+            }
+        }),
+        new Boundary({
+            position: {
+                x: 470,
+                y: 220
+            }
+        }),
+        new Boundary({
+            position: {
+                x: 470,
+                y: 170
+            }
+        }),
+        new Boundary({
+            position: {
+                x: 470,
+                y: 120
+            }
+        })
+    );
+
+    // Création des limites de collision de la carte
     const collisionMap2 = [];
     for (let i = 0; i < collision2.length; i += 70) {
         collisionMap2.push(collision2.slice(i, 70 + i));
@@ -529,7 +569,7 @@ function SecondeMap() {
     const boundaries2 = [];
     collisionMap2.forEach((row, i) => {
         row.forEach((symbol, j) => {
-            if (symbol === 2505)
+            if (symbol === 2505) {
                 boundaries2.push(
                     new Boundary({
                         position: {
@@ -538,48 +578,199 @@ function SecondeMap() {
                         }
                     })
                 );
+            }
         });
     });
 
-    // Dessiner la carte avec les nouvelles limites de collision
     background2.draw();
     boundaries2.forEach((boundary) => {
         boundary.draw();
     });
 
-    // Réinitialiser la position de la carte à afficher
+    // Dessiner les limites de la caméra
+    center_cam.forEach((camera) => {
+        camera.draw();
+    });
+
     background2.position.x = 0;
     background2.position.y = -700;
 
-    // Attendre que la deuxième image soit chargée avant de redessiner la carte
+    // Chargement de l'image de la carte
     background2.image.onload = function() {
-        // Redessiner la carte avec la nouvelle image et la nouvelle position
+        // Dessin initial de la carte et des limites
         background2.draw();
-        
-        // Mettre à jour la position du joueur pour qu'il commence sur la route de la carte
-        player.position.x = 0; // Ajustez la position x en fonction de la route
-        player.position.y = 250; // Ajustez la position y en fonction de la route
-
-        // Redessiner le joueur à sa nouvelle position
-        player.draw();
-
-        // Dessiner les nouvelles limites de collision
         boundaries2.forEach((boundary) => {
             boundary.position.x -= -425;
             boundary.position.y -= -150;
             boundary.draw();
         });
-    }
+        center_cam.forEach((camera) => {
+            camera.draw();
+        });
+
+        // Positionnement initial du joueur
+        player.position.x = 0;
+        player.position.y = 250;
+        player.draw();
+
+        // Ajout du système de déplacement
+        window.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'z':
+                case 'Z':
+                case 'ArrowUp':
+                    player.moving = true;
+                    player.image = player.sprites.up;
+                    break;
+                case 'q':
+                case 'Q':
+                case 'ArrowLeft':
+                    player.moving = true;
+                    player.image = player.sprites.left;
+                    break;
+                case 's':
+                case 'S':
+                case 'ArrowDown':
+                    player.moving = true;
+                    player.image = player.sprites.down;
+                    break;
+                case 'd':
+                case 'D':
+                case 'ArrowRight':
+                    player.moving = true;
+                    player.image = player.sprites.right;
+                    break;
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            player.moving = false;
+        });
+
+        // Fonction de détection de collision entre deux rectangles
+        function rectangleCollisions({ rectangle1, rectangle2 }) {
+            return (
+                rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
+                rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+                rectangle1.position.y <= rectangle2.position.y + rectangle2.height &&
+                rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+            );
+        }
+
+        function movePlayer() {
+            if (player.moving) {
+                let dx = 0, dy = 0;
+                // Détection des touches pressées et ajustement des coordonnées du joueur en conséquence
+                if (keys.z.presser) dy -= 5;
+                if (keys.q.presser) dx -= 5;
+                if (keys.s.presser) dy += 5;
+                if (keys.d.presser) dx += 5;
+        
+                // Vérifier les collisions avec les limites de collision sur l'axe horizontal (X)
+                let canMoveX = true;
+                for (let i = 0; i < boundaries2.length; i++) {
+                    const boundary = boundaries2[i];
+                    if (rectangleCollisions({
+                        rectangle1: player,
+                        rectangle2: {
+                            ...boundary,
+                            position: {
+                                x: boundary.position.x + dx,
+                                y: boundary.position.y
+                            }
+                        }
+                    })) {
+                        canMoveX = false;
+                        // Si une collision est détectée sur l'axe horizontal, ne pas mettre à jour dx
+                        dx = 0;
+                        break;
+                    }
+                }
+        
+                // Vérifier les collisions avec les limites de collision sur l'axe vertical (Y)
+                let canMoveY = true;
+                for (let i = 0; i < boundaries2.length; i++) {
+                    const boundary = boundaries2[i];
+                    if (rectangleCollision({
+                        rectangle1: player,
+                        rectangle2: {
+                            ...boundary,
+                            position: {
+                                x: boundary.position.x,
+                                y: boundary.position.y + dy
+                            }
+                        }
+                    })) {
+                        canMoveY = false;
+                        // Si une collision est détectée sur l'axe vertical, ne pas mettre à jour dy
+                        dy = 0;
+                        break;
+                    }
+                }
+        
+                // Mettre à jour les coordonnées du joueur uniquement si le mouvement dans une direction est autorisé
+                if (canMoveX) player.position.x += dx;
+                if (canMoveY) player.position.y += dy;
+        
+                // Redessiner la carte et les limites
+                background2.draw();
+                boundaries2.forEach((boundary) => {
+                    boundary.draw();
+                });
+                center_cam.forEach((camera) => {
+                    camera.draw();
+                });
+        
+                // Redessiner le joueur à sa nouvelle position
+                player.draw();
+            }
+        
+            // Répéter le déplacement à chaque rafraîchissement de l'écran
+            requestAnimationFrame(movePlayer);
+        }
+        
+        // Lancer la fonction de déplacement
+        movePlayer();
+    };
 }
 
 function TroisiemeMap() {
-
-    let moving = true;
+    // Initialisation des variables de mouvement
     player.moving = false;
-    ennemy.moving = false;
-    // Changer la source de l'image pour la deuxième carte
+
+    // Chargement de l'image de la carte
     background3.image.src = "./img/map3.png";
 
+    const center_cam3 = [];
+    center_cam3.push(
+        new Boundary({
+            position: {
+                x: 630,
+                y: 290
+            }
+        }),
+        new Boundary({
+            position: {
+                x: 580,
+                y: 290
+            }
+        }),
+        new Boundary({
+            position: {
+                x: 530,
+                y: 290
+            }
+        }),
+        new Boundary({
+            position: {
+                x: 480,
+                y: 290
+            }
+        })
+    );
+
+
+    // Création des limites de collision de la carte
     const collisionMap3 = [];
     for (let i = 0; i < collision3.length; i += 70) {
         collisionMap3.push(collision3.slice(i, 70 + i));
@@ -588,7 +779,7 @@ function TroisiemeMap() {
     const boundaries3 = [];
     collisionMap3.forEach((row, i) => {
         row.forEach((symbol, j) => {
-            if (symbol === 2505)
+            if (symbol === 2505) {
                 boundaries3.push(
                     new Boundary({
                         position: {
@@ -597,36 +788,104 @@ function TroisiemeMap() {
                         }
                     })
                 );
+            }
         });
     });
 
-    // Dessiner la carte avec les nouvelles limites de collision
     background3.draw();
     boundaries3.forEach((boundary) => {
         boundary.draw();
     });
+    center_cam3.forEach((boundary) => {
+        boundary.draw();
+    });
 
-    // Réinitialiser la position de la carte à afficher
     background3.position.x = -750;
     background3.position.y = -1342;
 
-    // Attendre que la deuxième image soit chargée avant de redessiner la carte
+    // Chargement de l'image de la carte
     background3.image.onload = function() {
-        // Redessiner la carte avec la nouvelle image et la nouvelle position
+        // Dessin initial de la carte et des limites
         background3.draw();
-        
-        // Mettre à jour la position du joueur pour qu'il commence sur la route de la carte
-        player.position.x = 465; // Ajustez la position x en fonction de la route
-        player.position.y = 500; // Ajustez la position y en fonction de la route
-
-        // Redessiner le joueur à sa nouvelle position
-        player.draw();
-
-        // Dessiner les nouvelles limites de collision
         boundaries3.forEach((boundary) => {
             boundary.position.x -= 325;
             boundary.position.y -= 494;
             boundary.draw();
         });
-    }
+        center_cam3.forEach((camera) => {
+            camera.draw();
+        });
+    
+        // Positionnement initial du joueur
+        player.position.x = 465;
+        player.position.y = 500;
+        player.draw();
+
+        // Ajout du système de déplacement
+        window.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'z':
+                case 'Z':
+                case 'ArrowUp':
+                    player.moving = true;
+                    player.image = player.sprites.up;
+                    break;
+                case 'q':
+                case 'Q':
+                case 'ArrowLeft':
+                    player.moving = true;
+                    player.image = player.sprites.left;
+                    break;
+                case 's':
+                case 'S':
+                case 'ArrowDown':
+                    player.moving = true;
+                    player.image = player.sprites.down;
+                    break;
+                case 'd':
+                case 'D':
+                case 'ArrowRight':
+                    player.moving = true;
+                    player.image = player.sprites.right;
+                    break;
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            player.moving = false;
+        });
+
+        // Fonction de déplacement
+        function movePlayer() {
+            if (player.moving) {
+                let dx = 0, dy = 0;
+                if (keys.z.presser) dy -= 5;
+                if (keys.q.presser) dx -= 5;
+                if (keys.s.presser) dy += 5;
+                if (keys.d.presser) dx += 5;
+
+                // Mise à jour de la position du joueur
+                player.position.x += dx;
+                player.position.y += dy;
+
+                // Redessiner la carte et les limites
+                background3.draw();
+                boundaries3.forEach((boundary) => {
+                    boundary.draw();
+                });
+                center_cam3.forEach((camera) => {
+                    camera.draw();
+                });
+
+                // Redessiner le joueur à sa nouvelle position
+                player.draw();
+            }
+
+            // Répéter le déplacement à chaque rafraîchissement de l'écran
+            requestAnimationFrame(movePlayer);
+        }
+
+        // Lancer la fonction de déplacement
+        movePlayer();
+    };
 }
