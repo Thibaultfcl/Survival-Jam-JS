@@ -61,9 +61,12 @@ class Sprite {
             document.getElementById(healthBar).style.width = `${target.health}%`;
             let retreatCounter = 0;
             let retreatInterval = setInterval(() => {
+                target.position.x += 5;
                 target.opacity = (retreatCounter % 2 === 0) ? 0 : 1;
                 retreatCounter++;
                 if (retreatCounter >= numRetreatRepeats * 2) {
+                    let targets = [target]
+                    moveElementAnimated(targets, -3.5, 500)
                     if (target.health <= 0) target.opacity = 0;
                     clearInterval(retreatInterval);
                 }
