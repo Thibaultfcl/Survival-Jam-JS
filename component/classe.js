@@ -1,9 +1,9 @@
 class Sprite {
-    constructor({position, velocity, image, frames = {max: 1, hold: 10}, sprites, animate = false, health = 100, isEnnemy = false}) {
+    constructor({position, image, frames = {max: 1, hold: 10}, sprites, animate = false, health = 100, isEnnemy = false}) {
         this.position = position
-        this.velocity = velocity
         this.image = image
         this.frames = {...frames, val: 0, elapsed: 0}
+
         this.image.onload = () => {
             this.width = this.image.width / this.frames.max
             this.height = this.image.height
@@ -13,7 +13,6 @@ class Sprite {
         this.opacity = 1
         this.health = health
         this.isEnnemy = isEnnemy
-        this.moving = false
     }
 
     draw() {
@@ -32,10 +31,6 @@ class Sprite {
         )
         c.restore()
 
-        if (!this.moving) {
-            return
-        }
-
         if (!this.animate) {
             return
         }
@@ -44,7 +39,7 @@ class Sprite {
             this.frames.elapsed ++
         }
 
-        if (this.frames.elapsed % this.frames.hold === 10) {
+        if (this.frames.elapsed % this.frames.hold === 0) {
             if (this.frames.val < this.frames.max - 1) {
                 this.frames.val++
             } else {
@@ -66,9 +61,12 @@ class Sprite {
             document.getElementById(healthBar).style.width = `${target.health}%`;
             let retreatCounter = 0;
             let retreatInterval = setInterval(() => {
+                target.position.x += 5;
                 target.opacity = (retreatCounter % 2 === 0) ? 0 : 1;
                 retreatCounter++;
                 if (retreatCounter >= numRetreatRepeats * 2) {
+                    let targets = [target]
+                    moveElementAnimated(targets, -3.5, 500)
                     if (target.health <= 0) target.opacity = 0;
                     clearInterval(retreatInterval);
                 }
@@ -87,7 +85,7 @@ class Boundary {
     }
 
     draw() {
-        c.fillStyle = "rgba(255, 0, 0, 0.5)"
+        c.fillStyle = "rgba(255, 0, 0, 0.5"
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 }

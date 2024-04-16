@@ -64,9 +64,9 @@ function animateBattle() {
 
 function moveElementAnimated(elements, deltaX, duration) {
     return new Promise((resolve, _) => {
-        const fps = 60; // Frames per second
-        const frames = duration * fps / 1000; // Total number of frames
-        const intervalTime = duration / frames; // Time between each frame
+        const fps = 60;
+        const frames = duration * fps / 1000;
+        const intervalTime = duration / frames;
     
         let currentFrame = 0;
         const interval = setInterval(() => {
