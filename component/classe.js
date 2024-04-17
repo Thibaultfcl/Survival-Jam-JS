@@ -61,12 +61,20 @@ class Sprite {
             document.getElementById(healthBar).style.width = `${target.health}%`;
             let retreatCounter = 0;
             let retreatInterval = setInterval(() => {
-                target.position.x += 5;
+                if (this.isEnnemy) {
+                    target.position.x -= 5;
+                } else {
+                    target.position.x += 5;
+                }
                 target.opacity = (retreatCounter % 2 === 0) ? 0 : 1;
                 retreatCounter++;
                 if (retreatCounter >= numRetreatRepeats * 2) {
                     let targets = [target]
-                    moveElementAnimated(targets, -3.5, 500)
+                    if (this.isEnnemy) {
+                        moveElementAnimated(targets, +3.5, 500)
+                    } else {
+                        moveElementAnimated(targets, -3.5, 500)
+                    }
                     if (target.health <= 0) target.opacity = 0;
                     clearInterval(retreatInterval);
                 }
@@ -85,7 +93,7 @@ class Boundary {
     }
 
     draw() {
-        c.fillStyle = "rgba(255, 0, 0, 0.5"
+        c.fillStyle = "rgba(255, 0, 0, 0.0)"
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 }
