@@ -23,8 +23,8 @@
     <div style="display: inline-block; position: relative">
       <div id="transitionDiv" class="transition"></div>
 
+      <!-- battle -->
       <div id="battleElements" style="display: none">
-        <!-- battle -->
         <div
           style="
             background-color: rgba(255, 255, 255, 0.7);
@@ -37,6 +37,22 @@
             display: flex;
           "
         >
+          <!-- dialogue -->
+          <div
+            id="dialogueBox"
+            style="
+              position: absolute;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              left: 0;
+              background-color: rgb(255, 255, 255);
+              padding: 12px;
+              display: none;
+              cursor: pointer;
+            "
+          ></div>
+
           <!-- attack button -->
           <div
             style="
@@ -46,7 +62,7 @@
             "
           >
             <button id="Attack1Button" style="font-size: 25px">Tackle</button>
-            <button id="Attack2Button" style="font-size: 25px">Attack2</button>
+            <button id="Attack2Button" style="font-size: 25px">Shield</button>
           </div>
         </div>
 
@@ -118,9 +134,12 @@
     </div>
       
     <!-- library audio -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js" 
-    integrity="sha512-xi/RZRIF/S0hJ+yJJYuZ5yk6/8pCiRlEXZzoguSMl+vk2i3m6UjUO/WcZ11blRL/O+rnj94JRGwt/CHbc9+6EA==" 
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"
+      integrity="sha512-xi/RZRIF/S0hJ+yJJYuZ5yk6/8pCiRlEXZzoguSMl+vk2i3m6UjUO/WcZ11blRL/O+rnj94JRGwt/CHbc9+6EA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
 
     <script src="/component/selectCharacter.js"></script>
     <script src="/component/collision.js"></script>

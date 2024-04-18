@@ -10,6 +10,9 @@ playerImgBattle.src = './img/playerRightBattle.png'
 const shieldImg = new Image()
 shieldImg.src = './img/shield.png'
 
+const darkSpearImg = new Image()
+darkSpearImg.src = './img/darkSpear.png'
+
 const battleBackground = new Sprite({
     position: {
         x: -200,
@@ -48,6 +51,19 @@ const shield = new Sprite({
     image: shieldImg
 })
 
+const darkSpear = new Sprite({
+    position: {
+        x: 200,
+        y: 375
+    },
+    image: darkSpearImg,
+    frames: {
+        max: 24,
+        hold: 10
+    },
+    animate: true
+})
+
 const playerWithSpells = [playerBattle, shield]
 let shieldActivated = false
 
@@ -64,9 +80,9 @@ function animateBattle() {
 
 function moveElementAnimated(elements, deltaX, duration) {
     return new Promise((resolve, _) => {
-        const fps = 60; // Frames per second
-        const frames = duration * fps / 1000; // Total number of frames
-        const intervalTime = duration / frames; // Time between each frame
+        const fps = 60;
+        const frames = duration * fps / 1000;
+        const intervalTime = duration / frames;
     
         let currentFrame = 0;
         const interval = setInterval(() => {
@@ -98,11 +114,13 @@ document.getElementById('Attack1Button').addEventListener('click', (event) => {
 document.getElementById('Attack2Button').addEventListener('click', (event) => {
     const clickedButton = event.target;
     if (clickedButton.tagName === 'BUTTON') {
-        Shield();
+        spellEnnemy1();
     }
 });
 
 function Tackle() {
+    document.querySelector('#dialogueBox').style.display = 'block'
+    document.querySelector('#dialogueBox').innerHTML = 'You used Tackle and dealed a total of 10 dmg'
     moveElementAnimated(playerWithSpells, -2, 750)
         .then(() => {
             return moveElementAnimated(playerWithSpells, +6, 500);
@@ -120,5 +138,26 @@ function Tackle() {
 }
 
 function Shield() {
+    document.querySelector('#dialogueBox').style.display = 'block'
+    document.querySelector('#dialogueBox').innerHTML = 'You used Shield, the next ammount of dammage you take will be canceled'
     shieldActivated = true
 }
+
+function spellEnnemy1() {
+    document.querySelector('#dialogueBox').style.display = 'block'
+    document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. You lost 10 hp'
+
+    darkSpear.draw();
+
+    ennemyBattle.attack({
+        attack: {
+            name: 'Dark Spear',
+            damage: 10,
+        },
+        target: playerBattle
+    });
+}
+
+document.querySelector('#dialogueBox').addEventListener('click', ()=>{
+    document.querySelector('#dialogueBox').style.display = 'none'
+})
