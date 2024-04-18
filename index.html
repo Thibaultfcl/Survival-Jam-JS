@@ -11,9 +11,15 @@
       href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="static/inventaireStyle.css">
   </head>
 
   <body>
+
+    <div id="inventoryNPC">
+      <img src="img/photochat.png" alt="Inventaire">
+  </div>
+
     <div style="display: inline-block; position: relative">
       <div id="transitionDiv" class="transition"></div>
 
@@ -110,7 +116,7 @@
       </div>
       <canvas></canvas>
     </div>
-
+      
     <!-- library audio -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js" 
     integrity="sha512-xi/RZRIF/S0hJ+yJJYuZ5yk6/8pCiRlEXZzoguSMl+vk2i3m6UjUO/WcZ11blRL/O+rnj94JRGwt/CHbc9+6EA==" 
@@ -122,5 +128,6 @@
     <script src="/component/classe.js"></script>
     <script src="/component/battle.js"></script>
     <script src="/component/index.js"></script>
+    <script src="component/inventory.js"></script>
   </body>
 </html>
