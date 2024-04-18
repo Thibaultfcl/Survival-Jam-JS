@@ -53,6 +53,11 @@ class Sprite {
         const attackDuration = 0.08;
         const numRetreatRepeats = 5;
 
+        if(this.isEnnemy && shieldActivated) {
+            shieldActivated = false;
+            return;
+        }
+
         let healthBar = 'ennemyHealthBar'
         if (this.isEnnemy) healthBar = 'playerHealthBar'
 
@@ -76,7 +81,10 @@ class Sprite {
                     } else {
                         moveElementAnimated(targets, -3.5, 500)
                     }
-                    if (target.health <= 0) target.opacity = 0;
+                    if (target.health <= 0) {
+                        target.opacity = 0;
+                        battle.initiated = false
+                    }
                     clearInterval(retreatInterval);
                 }
             }, attackDuration * 1000);

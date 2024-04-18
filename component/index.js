@@ -331,7 +331,6 @@ function FirstMap() {
     let moving = true;
     player.animate = false
     
-
     //battle
     if (battle.initiated) return;
     if (

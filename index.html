@@ -15,13 +15,12 @@
   </head>
 
   <body>
-
-    <div id="inventoryNPC">
-      <img src="img/photochat.png" alt="Inventaire">
-  </div>
-
     <div style="display: inline-block; position: relative">
       <div id="transitionDiv" class="transition"></div>
+
+      <div id="inventoryNPC" style="display: none;">
+        <img src="img/photochat.png" alt="Inventaire">
+    </div>
 
       <!-- battle -->
       <div id="battleElements" style="display: none">
@@ -141,7 +140,6 @@
       referrerpolicy="no-referrer"
     ></script>
 
-    <script src="/component/selectCharacter.js"></script>
     <script src="/component/collision.js"></script>
     <script src="/component/audio.js"></script>
     <script src="/component/classe.js"></script>
