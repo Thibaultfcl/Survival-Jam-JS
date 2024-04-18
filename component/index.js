@@ -296,7 +296,7 @@ const battle = {
 let mooveLeft = true;
 let crosse = false;
 let passage_map_active = true;
-let isFirstMapVisible = true; 
+let isFirstMapVisible = true;
 
 function FirstMap() {
     animationID = window.requestAnimationFrame(FirstMap);
@@ -499,18 +499,98 @@ function FirstMap() {
         if (keys.z.presser) {
             player.animate = true;
             player.image = player.sprites.up;
+            for (let i = 0; i < boundaries.length; i++) {
+                const boundary = boundaries[i];
+                if (
+                    rectangleCollision({
+                        rectangle1: player,
+                        rectangle2: {
+                            ...boundary,
+                            position: {
+                                x: boundary.position.x,
+                                y: boundary.position.y + 5
+                            }
+                        }
+                    })
+                ) {
+                    moving = false;
+                    break;
+                }
+            }
+
             player.position.y -= 5;
         } else if (keys.s.presser) {
             player.animate = true;
             player.image = player.sprites.down;
+
+            for (let i = 0; i < boundaries.length; i++) {
+                const boundary = boundaries[i];
+                if (
+                    rectangleCollision({
+                        rectangle1: player,
+                        rectangle2: {
+                            ...boundary,
+                            position: {
+                                x: boundary.position.x,
+                                y: boundary.position.y - 5
+                            }
+                        }
+                    })
+                ) {
+                    moving = false;
+                    break;
+                }
+            }
+
             player.position.y += 5;
         } else if (keys.q.presser) {
             player.animate = true;
             player.image = player.sprites.left;
+
+
+            for (let i = 0; i < boundaries.length; i++) {
+                const boundary = boundaries[i];
+                if (
+                    rectangleCollision({
+                        rectangle1: player,
+                        rectangle2: {
+                            ...boundary,
+                            position: {
+                                x: boundary.position.x + 5,
+                                y: boundary.position.y
+                            }
+                        }
+                    })
+                ) {
+                    moving = false;
+                    break;
+                }
+            }
+
             player.position.x -= 5;
         } else if (keys.d.presser) {
             player.animate = true;
             player.image = player.sprites.right;
+
+            for (let i = 0; i < boundaries.length; i++) {
+                const boundary = boundaries[i];
+                if (
+                    rectangleCollision({
+                        rectangle1: player,
+                        rectangle2: {
+                            ...boundary,
+                            position: {
+                                x: boundary.position.x - 5,
+                                y: boundary.position.y
+                            }
+                        }
+                    })
+                ) {
+                    moving = false;
+                    break;
+                }
+            }
+
             player.position.x += 5;
         }
     }
@@ -534,6 +614,7 @@ function FirstMap() {
         if (rectangleCollision({ rectangle1: player, rectangle2: psg[0] })) {
             isFirstMapVisible = false; // Désactiver la première carte
             SecondMap(); // Afficher la seconde carte
+            crosse = false; // Réinitialiser la variable crosse à false
             return; // Arrêter la fonction pour éviter que le joueur continue de bouger après le changement de map
         }
     }
