@@ -67,9 +67,18 @@ const darkSpear = new Sprite({
 const playerWithSpells = [playerBattle, shield]
 let shieldActivated = false
 let darkSpearActivated = false
+let attackEnnemy = false
 
 function animateBattle() {
-    window.requestAnimationFrame(animateBattle)
+    animationID = window.requestAnimationFrame(animateBattle)
+
+    if(!battle.initiated) {
+        window.cancelAnimationFrame(animationID);
+        document.getElementById('battleElements').style.display = 'none';
+        FirstMap();
+        return
+    }
+
     document.getElementById('transitionDiv').classList.add('hide-transition');
     battleBackground.draw()
     ennemyBattle.draw()
@@ -134,31 +143,38 @@ function Tackle() {
             playerBattle.attack({
                 attack: {
                     name: 'Tackle',
-                    damage: 10,
+                    damage: 50,
                 },
                 target: ennemyBattle
             });
             return moveElementAnimated(playerWithSpells, -2, 750);
         })
+    attackEnnemy = true
 }
 
 function Shield() {
     document.querySelector('#dialogueBox').style.display = 'block'
     document.querySelector('#dialogueBox').innerHTML = 'You used Shield, the next ammount of dammage you take will be canceled'
     shieldActivated = true
+    attackEnnemy = true
 }
 
 let index = 0
 function spellEnnemy1() {
-    const attackArray = [10, 20, 100]
+    const attackArray = [5, 5, 100]
     const attackDmg = attackArray[index]
     index ++
-    if(index > attackArray.length) index = 0
+    if(index > attackArray.length-1) index = 0
 
     document.querySelector('#dialogueBox').style.display = 'block'
-    document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. You lost ' + attackDmg + ' hp'
+    if(shieldActivated) {
+        document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. Your sield blocked the dammage'
+    } else {
+        document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. You lost ' + attackDmg + ' hp'
+    }
 
     darkSpearActivated = true
+    if(shieldActivated) darkSpearActivated = false
     darkSpear.frames.val = 0
 
     ennemyBattle.attack({
@@ -172,5 +188,6 @@ function spellEnnemy1() {
 
 document.querySelector('#dialogueBox').addEventListener('click', ()=>{
     document.querySelector('#dialogueBox').style.display = 'none'
-    spellEnnemy1();
+    if(attackEnnemy) spellEnnemy1()
+    attackEnnemy = false
 })

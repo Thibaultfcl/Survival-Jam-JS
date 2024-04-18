@@ -236,7 +236,6 @@ function FirstMap() {
     let moving = true;
     player.animate = false
     
-
     //battle
     if (battle.initiated) return;
     if (
@@ -315,8 +314,8 @@ function FirstMap() {
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.y += 5;
-           });
-       }
+            });
+        }
     } else if (keys.q.presser) {
         player.animate = true;
         player.image = player.sprites.left;
@@ -342,8 +341,8 @@ function FirstMap() {
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.x += 5;
-           });
-       }
+            });
+        }
     } else if (keys.s.presser) {
         player.animate = true;
         player.image = player.sprites.down;
@@ -369,8 +368,8 @@ function FirstMap() {
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.y -= 5;
-           });
-       }
+            });
+        }
     } else if (keys.d.presser) {
         player.animate = true;
         player.image = player.sprites.right;
@@ -396,7 +395,7 @@ function FirstMap() {
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.x -= 5;
-           });
+            });
         }
     }
 }
