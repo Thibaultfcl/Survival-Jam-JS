@@ -1,0 +1,11 @@
+#inventoryNPC {
+    position: fixed;
+    top: 10px; /* Ajustez la position verticale selon vos besoins */
+    left: 10px; /* Ajustez la position horizontale selon vos besoins */
+    z-index: 1000;
+}
+
+.hidden {
+    display: none;
+}
+

@@ -58,6 +58,7 @@ class Sprite {
 
         setTimeout(() => {
             target.health -= attack.damage
+            if(target.health < 0) target.health = 0
             document.getElementById(healthBar).style.width = `${target.health}%`;
             let retreatCounter = 0;
             let retreatInterval = setInterval(() => {

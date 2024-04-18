@@ -619,7 +619,7 @@ function FirstMap() {
         }
     }
 }
-FirstMap();
+animateBattle();
 
 function SecondMap() {
     // Initialisation des variables de mouvement

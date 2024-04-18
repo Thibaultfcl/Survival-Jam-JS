@@ -53,12 +53,12 @@ const shield = new Sprite({
 
 const darkSpear = new Sprite({
     position: {
-        x: 200,
-        y: 375
+        x: 225,
+        y: 300
     },
     image: darkSpearImg,
     frames: {
-        max: 24,
+        max: 20,
         hold: 10
     },
     animate: true
@@ -66,6 +66,7 @@ const darkSpear = new Sprite({
 
 const playerWithSpells = [playerBattle, shield]
 let shieldActivated = false
+let darkSpearActivated = false
 
 function animateBattle() {
     window.requestAnimationFrame(animateBattle)
@@ -76,6 +77,10 @@ function animateBattle() {
     document.getElementById('battleElements').style.display = 'block';
 
     if (shieldActivated) shield.draw()
+    if (darkSpearActivated) darkSpear.draw()
+    if (darkSpear.frames.val == 19) {
+        darkSpearActivated = false
+    }
 }
 
 function moveElementAnimated(elements, deltaX, duration) {
@@ -114,7 +119,7 @@ document.getElementById('Attack1Button').addEventListener('click', (event) => {
 document.getElementById('Attack2Button').addEventListener('click', (event) => {
     const clickedButton = event.target;
     if (clickedButton.tagName === 'BUTTON') {
-        spellEnnemy1();
+        Shield();
     }
 });
 
@@ -143,16 +148,23 @@ function Shield() {
     shieldActivated = true
 }
 
+let index = 0
 function spellEnnemy1() {
-    document.querySelector('#dialogueBox').style.display = 'block'
-    document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. You lost 10 hp'
+    const attackArray = [10, 20, 100]
+    const attackDmg = attackArray[index]
+    index ++
+    if(index > attackArray.length) index = 0
 
-    darkSpear.draw();
+    document.querySelector('#dialogueBox').style.display = 'block'
+    document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. You lost ' + attackDmg + ' hp'
+
+    darkSpearActivated = true
+    darkSpear.frames.val = 0
 
     ennemyBattle.attack({
         attack: {
             name: 'Dark Spear',
-            damage: 10,
+            damage: attackDmg,
         },
         target: playerBattle
     });
@@ -160,4 +172,5 @@ function spellEnnemy1() {
 
 document.querySelector('#dialogueBox').addEventListener('click', ()=>{
     document.querySelector('#dialogueBox').style.display = 'none'
+    spellEnnemy1();
 })
