@@ -69,13 +69,14 @@ let shieldActivated = false
 let darkSpearActivated = false
 let attackEnnemy = false
 
-function animateBattle() {
-    animationID = window.requestAnimationFrame(animateBattle)
+function animateBattle(ennemy) {
+    const battleAnimationID = window.requestAnimationFrame(animateBattle)
 
     if(!battle.initiated) {
-        window.cancelAnimationFrame(animationID);
+        ennemy.isDead = true
+        window.cancelAnimationFrame(battleAnimationID);
         document.getElementById('battleElements').style.display = 'none';
-        FirstMap();
+        firstMap();
         return
     }
 
@@ -188,6 +189,6 @@ function spellEnnemy1() {
 
 document.querySelector('#dialogueBox').addEventListener('click', ()=>{
     document.querySelector('#dialogueBox').style.display = 'none'
-    if(attackEnnemy) spellEnnemy1()
+    if(attackEnnemy && ennemyBattle.health > 0) spellEnnemy1()
     attackEnnemy = false
 })

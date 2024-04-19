@@ -217,8 +217,8 @@ let crosse = false;
 let passage_map_active = true;
 let isFirstMapVisible = true;
 
-function FirstMap() {
-    animationID = window.requestAnimationFrame(FirstMap);
+function firstMap() {
+    const animationID = window.requestAnimationFrame(firstMap);
 
     //draw elements
     background.draw();
@@ -242,7 +242,7 @@ function FirstMap() {
         rectangleCollision({
             rectangle1: player,
             rectangle2: ennemy
-        })
+        }) && !ennemy.isDead
     ) {
         window.cancelAnimationFrame(animationID);
         audio.Map.stop();
@@ -251,7 +251,7 @@ function FirstMap() {
         battle.initiated = true;
         document.getElementById('transitionDiv').classList.add('show-transition');
         document.getElementById('transitionDiv').addEventListener('animationend', function() {
-            animateBattle();
+            animateBattle(ennemy);
         }, { once: true });
     }
 
@@ -399,4 +399,4 @@ function FirstMap() {
         }
     }
 }
-FirstMap();
+firstMap();
