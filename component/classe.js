@@ -101,6 +101,15 @@ class Boundary {
         this.height = 48
     }
 
+    // isPointInside(point) {
+    //     return (
+    //         point.x >= this.position.x &&
+    //         point.x <= this.position.x + this.width &&
+    //         point.y >= this.position.y &&
+    //         point.y <= this.position.y + this.height
+    //     );
+    // }
+
     draw() {
         c.fillStyle = "rgba(255, 0, 0, 0.5)"
         c.fillRect(this.position.x, this.position.y, this.width, this.height)

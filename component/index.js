@@ -80,6 +80,30 @@ const ennemy = new Sprite({
     animate: true
 });
 
+// const dialogue = {
+//     active: false,
+//     text: "BG",
+//     position: {
+//         x: 5350,
+//         y: 70
+//     },
+//     width: 200,
+//     height: 100
+// };
+
+// function toggleDialogue() {
+//     dialogue.active = !dialogue.active;
+//     if (dialogue.active) {
+//         document.getElementById('dialogueBoxs').style.display = 'block';
+//         document.getElementById('dialogueText').innerText = dialogue.text;
+//     } else {
+//         document.getElementById('dialogueBoxs').style.display = 'none';
+//     }
+// }
+
+// document.getElementById('dialogueButton').addEventListener('click', toggleDialogue);
+
+
 const background = new Sprite({
     position: {
         x: offset.x,
@@ -95,6 +119,29 @@ const foreground = new Sprite({
     },
     image: foregroundImage
 });
+
+const pass_boss  = [];
+pass_boss.push(
+    new Boundary({
+        position: {
+            x: 5450,
+            y: 70
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 5350,
+            y: 70
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 5400,
+            y: 70
+        }
+    })
+
+);
 
 const collisionMap = [];
 for (let i = 0; i < collision.length; i += 139) {
@@ -132,15 +179,18 @@ ennemyBoundaries.push(
     })
 );
 
-const movables = [background, ...boundaries, foreground, ennemy, ...ennemyBoundaries];
+const movables = [background, ...boundaries, foreground, ennemy, ...ennemyBoundaries, ...pass_boss];
 
 function rectangleCollision({ rectangle1, rectangle2 }) {
-    return (
-        rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
-        rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
-        rectangle1.position.y <= rectangle2.position.y + rectangle2.height &&
-        rectangle1.position.y + rectangle1.height >= rectangle2.position.y
-    );
+    if (!rectangle2.traversable) {
+        return (
+            rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
+            rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+            rectangle1.position.y <= rectangle2.position.y + rectangle2.height &&
+            rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+        );
+    }
+    return false;
 }
 
 const keys = {
@@ -217,6 +267,7 @@ let crosse = false;
 let passage_map_active = true;
 let isFirstMapVisible = true;
 
+
 function FirstMap() {
     animationID = window.requestAnimationFrame(FirstMap);
 
@@ -228,6 +279,10 @@ function FirstMap() {
     ennemyBoundaries.forEach((boundary) => {
         boundary.draw();
     });
+    pass_boss.forEach((boss) => {
+        boss.draw();
+    });
+    
 
     player.draw();
     ennemy.draw();
@@ -236,6 +291,7 @@ function FirstMap() {
     let moving = true;
     player.animate = false
     
+
     //battle
     if (battle.initiated) return;
     if (
@@ -314,8 +370,8 @@ function FirstMap() {
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.y += 5;
-            });
-        }
+        });
+    }
     } else if (keys.q.presser) {
         player.animate = true;
         player.image = player.sprites.left;
@@ -341,8 +397,8 @@ function FirstMap() {
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.x += 5;
-            });
-        }
+        });
+    }
     } else if (keys.s.presser) {
         player.animate = true;
         player.image = player.sprites.down;
@@ -368,8 +424,8 @@ function FirstMap() {
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.y -= 5;
-            });
-        }
+        });
+    }
     } else if (keys.d.presser) {
         player.animate = true;
         player.image = player.sprites.right;
@@ -395,7 +451,7 @@ function FirstMap() {
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.x -= 5;
-            });
+        });
         }
     }
 }
