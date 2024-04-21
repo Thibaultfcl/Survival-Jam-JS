@@ -18,6 +18,45 @@ function startAudio() {
         audioStarted = true;
     }
 }
+function checkEnemyCollision(animationID) {
+    ennemies.forEach(enemy => {
+    if (
+        rectangleCollision({
+            rectangle1: player,
+            rectangle2: enemy
+        }) && !enemy.isDead
+    ) {
+        window.cancelAnimationFrame(animationID);
+        audio.Map.stop();
+        audio.Transibattle.play();
+        battle.initiated = true;
+        document.getElementById('transitionDiv').classList.add('show-transition');
+        document.getElementById('transitionDiv').addEventListener('animationend', function() {
+            animateBattle(enemy);
+        }, { once: true });
+    }
+});
+}
+function moveEnemy(ennemyBoundaries) {
+    ennemies.forEach(enemy => {
+        if (enemy.movingLeft) {
+            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[0] })) {
+                enemy.movingLeft = false;
+                enemy.image = enemy.sprites.left;
+            } else {
+                enemy.position.x -= 0.5;
+            }
+        } else {
+            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[1] })) {
+                enemy.movingLeft = true;
+                enemy.image = enemy.sprites.right;
+            } else {
+                enemy.position.x += 0.5;
+            }
+        }
+    });
+}
+
 
 addEventListener('click', startAudio);
 
@@ -44,6 +83,12 @@ ennemyImage.src = "./img/ennemy.png";
 
 const ennemyImage2 = new Image();
 ennemyImage2.src = "./img/ennemy2.png";
+
+const ennemy2Image = new Image();
+ennemy2Image.src = "./img/ennemy.png";
+
+const ennemy2Image2 = new Image();
+ennemy2Image2.src = "./img/ennemy2.png";
 
 const player = new Sprite({
     position: {
@@ -76,6 +121,23 @@ const ennemy = new Sprite({
     sprites: {
         left: ennemyImage,
         right: ennemyImage2,
+    },
+    animate: true
+});
+
+const ennemy2 = new Sprite({
+    position: {
+        x: 1100,
+        y: -145,
+    },
+    image: ennemy2Image,
+    frames: {
+        max: 13,
+        hold: 10
+    },
+    sprites: {
+        left: ennemy2Image,
+        right: ennemy2Image2,
     },
     animate: true
 });
@@ -131,8 +193,10 @@ ennemyBoundaries.push(
         }
     })
 );
+//list for all monster
+const ennemies = [ennemy,ennemy2];
 
-const movables = [background, ...boundaries, foreground, ennemy, ...ennemyBoundaries];
+const movables = [background, ...boundaries, foreground,...ennemyBoundaries,...ennemies];
 
 function rectangleCollision({ rectangle1, rectangle2 }) {
     return (
@@ -231,6 +295,7 @@ function firstMap() {
 
     player.draw();
     ennemy.draw();
+    ennemy2.draw();
     foreground.draw();
 
     let moving = true;
@@ -238,39 +303,9 @@ function firstMap() {
     
     //battle
     if (battle.initiated) return;
-    if (
-        rectangleCollision({
-            rectangle1: player,
-            rectangle2: ennemy
-        }) && !ennemy.isDead
-    ) {
-        window.cancelAnimationFrame(animationID);
-        audio.Map.stop();
-        audio.Transibattle.play();
-        // audio.Battle.play()
-        battle.initiated = true;
-        document.getElementById('transitionDiv').classList.add('show-transition');
-        document.getElementById('transitionDiv').addEventListener('animationend', function() {
-            animateBattle(ennemy);
-        }, { once: true });
-    }
-
-    //ennemy movement
-    if(
-        rectangleCollision({
-            rectangle1: ennemy,
-            rectangle2: ennemyBoundaries[0]
-        })
-    ) {
-        mooveLeft = true
-    } else if (
-        rectangleCollision({
-            rectangle1: ennemy,
-            rectangle2: ennemyBoundaries[1]
-        })
-    ) {
-        mooveLeft = false
-    }
+    
+    checkEnemyCollision(animationID)
+    moveEnemy(ennemyBoundaries)
     // else if (
     //     rectangleCollision({
     //         rectangle1: player,
@@ -279,15 +314,6 @@ function firstMap() {
     // ) {
     //     mooveLeft = false
     // }
-
-    if (mooveLeft) {
-        ennemy.image = ennemy.sprites.left
-        ennemy.position.x += 0.5
-    } else {
-        ennemy.image = ennemy.sprites.right
-        ennemy.position.x -= 0.5
-    }
-
     //player movement
     if (keys.z.presser) {
         player.animate = true;
@@ -400,3 +426,4 @@ function firstMap() {
     }
 }
 firstMap();
+
