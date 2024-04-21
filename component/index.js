@@ -80,30 +80,6 @@ const ennemy = new Sprite({
     animate: true
 });
 
-// const dialogue = {
-//     active: false,
-//     text: "BG",
-//     position: {
-//         x: 5350,
-//         y: 70
-//     },
-//     width: 200,
-//     height: 100
-// };
-
-// function toggleDialogue() {
-//     dialogue.active = !dialogue.active;
-//     if (dialogue.active) {
-//         document.getElementById('dialogueBoxs').style.display = 'block';
-//         document.getElementById('dialogueText').innerText = dialogue.text;
-//     } else {
-//         document.getElementById('dialogueBoxs').style.display = 'none';
-//     }
-// }
-
-// document.getElementById('dialogueButton').addEventListener('click', toggleDialogue);
-
-
 const background = new Sprite({
     position: {
         x: offset.x,
@@ -119,29 +95,6 @@ const foreground = new Sprite({
     },
     image: foregroundImage
 });
-
-const pass_boss  = [];
-pass_boss.push(
-    new Boundary({
-        position: {
-            x: 5450,
-            y: 70
-        }
-    }),
-    new Boundary({
-        position: {
-            x: 5350,
-            y: 70
-        }
-    }),
-    new Boundary({
-        position: {
-            x: 5400,
-            y: 70
-        }
-    })
-
-);
 
 const collisionMap = [];
 for (let i = 0; i < collision.length; i += 139) {
@@ -179,18 +132,31 @@ ennemyBoundaries.push(
     })
 );
 
-const movables = [background, ...boundaries, foreground, ennemy, ...ennemyBoundaries];
+const pancarte1 = [];
+pancarte1.push(
+    new Boundary({
+        position: {
+            x: 4350,
+            y: 110
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 4398,
+            y: 110
+        }
+    })
+)
+
+const movables = [background, ...boundaries, foreground, ennemy, ...ennemyBoundaries, ...pancarte1];
 
 function rectangleCollision({ rectangle1, rectangle2 }) {
-    if (!rectangle2.traversable) {
-        return (
-            rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
-            rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
-            rectangle1.position.y <= rectangle2.position.y + rectangle2.height &&
-            rectangle1.position.y + rectangle1.height >= rectangle2.position.y
-        );
-    }
-    return false;
+    return (
+        rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
+        rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+        rectangle1.position.y <= rectangle2.position.y + rectangle2.height &&
+        rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+    );
 }
 
 const keys = {
@@ -267,9 +233,8 @@ let crosse = false;
 let passage_map_active = true;
 let isFirstMapVisible = true;
 
-
-function FirstMap() {
-    animationID = window.requestAnimationFrame(FirstMap);
+function firstMap() {
+    const animationID = window.requestAnimationFrame(firstMap);
 
     //draw elements
     background.draw();
@@ -277,6 +242,9 @@ function FirstMap() {
         boundary.draw();
     });
     ennemyBoundaries.forEach((boundary) => {
+        boundary.draw();
+    });
+    pancarte1.forEach((boundary) => {
         boundary.draw();
     });
 
@@ -287,30 +255,23 @@ function FirstMap() {
     let moving = true;
     player.animate = false
     
-
     //battle
     if (battle.initiated) return;
     if (
         rectangleCollision({
             rectangle1: player,
             rectangle2: ennemy
-        })
+        }) && !ennemy.isDead
     ) {
         window.cancelAnimationFrame(animationID);
         audio.Map.stop();
-        // audio.Transibattle.play();
-        // audio.Transibattle.stop();
-        audio.Battle.play()
-        if (battle.initiated = true) {
-            // battle.initiated = true;
-            document.getElementById('transitionDiv').classList.add('show-transition');
-            document.getElementById('transitionDiv').addEventListener('animationend', function() {
-                animateBattle();
-            }, { once: true });
-        } else {
-            audio.Battle.stop();
-            audio.Map.play();
-        }
+        audio.Transibattle.play();
+        // audio.Battle.play()
+        battle.initiated = true;
+        document.getElementById('transitionDiv').classList.add('show-transition');
+        document.getElementById('transitionDiv').addEventListener('animationend', function() {
+            animateBattle(ennemy);
+        }, { once: true });
     }
 
     //ennemy movement
@@ -372,8 +333,8 @@ function FirstMap() {
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.y += 5;
-        });
-    }
+            });
+        }
     } else if (keys.q.presser) {
         player.animate = true;
         player.image = player.sprites.left;
@@ -399,8 +360,8 @@ function FirstMap() {
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.x += 5;
-        });
-    }
+            });
+        }
     } else if (keys.s.presser) {
         player.animate = true;
         player.image = player.sprites.down;
@@ -426,8 +387,8 @@ function FirstMap() {
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.y -= 5;
-        });
-    }
+            });
+        }
     } else if (keys.d.presser) {
         player.animate = true;
         player.image = player.sprites.right;
@@ -453,7 +414,7 @@ function FirstMap() {
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.x -= 5;
-        });
+            });
         }
     }
     
@@ -471,4 +432,4 @@ function FirstMap() {
         }
     });
 }
-FirstMap();
+firstMap();
