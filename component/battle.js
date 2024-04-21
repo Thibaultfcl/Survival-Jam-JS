@@ -40,16 +40,24 @@ const playerBattle = new Sprite({
         x: 200,
         y: 375
     },
-    image: playerImgBattle
-})
+    image: playerImgBattle,
+    initialPosition: {
+        x: 200,
+        y: 375
+    }
+});
 
 const shield = new Sprite({
     position: {
         x: 85,
         y: 250
     },
-    image: shieldImg
-})
+    image: shieldImg,
+    initialPosition: {
+        x: 85,
+        y: 250
+    }
+});
 
 const darkSpear = new Sprite({
     position: {
@@ -61,36 +69,62 @@ const darkSpear = new Sprite({
         max: 20,
         hold: 10
     },
-    animate: true
-})
+    animate: true,
+    initialPosition: {
+        x: 225,
+        y: 300
+    }
+});
 
-const playerWithSpells = [playerBattle, shield]
+
+const playerWithSpells = [playerBattle, shield];
 let shieldActivated = false
 let darkSpearActivated = false
 let attackEnnemy = false
 
-function animateBattle(ennemy) {
-    const battleAnimationID = window.requestAnimationFrame(animateBattle)
+function resetBattleSprites() {
+    playerBattle.position.x = playerBattle.initialPosition.x;
+    playerBattle.position.y = playerBattle.initialPosition.y;
+    shield.position.x = shield.initialPosition.x;
+    shield.position.y = shield.initialPosition.y;
+    ennemyBattle.position.x = 700;
+    ennemyBattle.position.y = 350;
+}
 
-    if(!battle.initiated) {
-        ennemy.isDead = true
+let battleAnimationID;
+
+function animateBattle() {
+    battleAnimationID = window.requestAnimationFrame(animateBattle);
+
+    if (!battle.initiated) {
+        ennemy.isDead = true;
         window.cancelAnimationFrame(battleAnimationID);
         document.getElementById('battleElements').style.display = 'none';
-        FirstMap();
-        return
+        
+        moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
+            firstMap(); // Revenir à la carte principale
+            document.querySelector('#userInterface').style.display = 'none';
+            deplacement(); // Réinitialiser les positions des sprites
+        });
+
+        return;
     }
 
-
     document.getElementById('transitionDiv').classList.add('hide-transition');
-    battleBackground.draw()
-    ennemyBattle.draw()
-    playerBattle.draw()
+    battleBackground.draw();
+    ennemyBattle.draw();
+    playerBattle.draw();
     document.getElementById('battleElements').style.display = 'block';
 
-    if (shieldActivated) shield.draw()
-    if (darkSpearActivated) darkSpear.draw()
+    if (shieldActivated) shield.draw();
+    if (darkSpearActivated) darkSpear.draw();
     if (darkSpear.frames.val == 19) {
-        darkSpearActivated = false
+        darkSpearActivated = false;
+    }
+
+    // Si la santé de l'ennemi est zéro, fin du combat
+    if (ennemy.health <= 0) {
+        battle.initiated = false;
     }
 }
 
@@ -152,14 +186,17 @@ function Tackle() {
             });
             return moveElementAnimated(playerWithSpells, -2, 750);
         })
-    attackEnnemy = true
+        .then(() => {
+            shieldActivated = false; // Réinitialiser shieldActivated
+        });
+    attackEnnemy = true;
 }
 
 function Shield() {
     document.querySelector('#dialogueBox').style.display = 'block'
     document.querySelector('#dialogueBox').innerHTML = 'You used Shield, the next ammount of dammage you take will be canceled'
-    shieldActivated = true
-    attackEnnemy = true
+    shieldActivated = true;
+    attackEnnemy = true;
 }
 
 let index = 0
@@ -194,3 +231,4 @@ document.querySelector('#dialogueBox').addEventListener('click', ()=>{
     if(attackEnnemy && ennemyBattle.health > 0) spellEnnemy1()
     attackEnnemy = false
 })
+

@@ -297,42 +297,10 @@ let crosse = false;
 let passage_map_active = true;
 let isFirstMapVisible = true;
 
-function firstMap() {
-    const animationID = window.requestAnimationFrame(firstMap);
-
-    //draw elements
-    background.draw();
-    boundaries.forEach((boundary) => {
-        boundary.draw();
-    });
-    ennemyBoundaries.forEach((boundary) => {
-        boundary.draw();
-    });
-    pancarte1.forEach((boundary) => {
-        boundary.draw();
-    });
-
-    player.draw();
-    ennemy.draw();
-    ennemy2.draw();
-    foreground.draw();
-
+function deplacement() {
     let moving = true;
     player.animate = false
-    
-    //battle
-    if (battle.initiated) return;
-    
-    checkEnemyCollision(animationID)
-    moveEnemy(ennemyBoundaries)
-    // else if (
-    //     rectangleCollision({
-    //         rectangle1: player,
-    //         rectangle2: passage_map[0]
-    //     })
-    // ) {
-    //     mooveLeft = false
-    // }
+
     //player movement
     if (keys.z.presser) {
         player.animate = true;
@@ -443,6 +411,40 @@ function firstMap() {
             });
         }
     }
+}
+
+function firstMap() {
+    const animationID = window.requestAnimationFrame(firstMap);
+
+    //draw elements
+    background.draw();
+    boundaries.forEach((boundary) => {
+        boundary.draw();
+    });
+    ennemyBoundaries.forEach((boundary) => {
+        boundary.draw();
+    });
+    pancarte1.forEach((boundary) => {
+        boundary.draw();
+    });
+
+    player.draw();
+    ennemy.draw();
+    ennemy2.draw();
+    foreground.draw();
+
+    // let moving = true;
+    // player.animate = false
+    
+    //battle
+    if (battle.initiated) {
+        animateBattle(ennemy); // Appeler animateBattle seulement si le combat est initié
+        return;
+    }
+    
+    checkEnemyCollision(animationID)
+    moveEnemy(ennemyBoundaries)
+    deplacement()
     
     pancarte1.forEach((boundary) => {
         if(rectangleCollision({
@@ -459,4 +461,3 @@ function firstMap() {
     });
 }
 firstMap();
-
