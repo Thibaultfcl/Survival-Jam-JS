@@ -179,7 +179,7 @@ ennemyBoundaries.push(
     })
 );
 
-const movables = [background, ...boundaries, foreground, ennemy, ...ennemyBoundaries, ...pass_boss];
+const movables = [background, ...boundaries, foreground, ennemy, ...ennemyBoundaries];
 
 function rectangleCollision({ rectangle1, rectangle2 }) {
     if (!rectangle2.traversable) {
@@ -279,10 +279,6 @@ function FirstMap() {
     ennemyBoundaries.forEach((boundary) => {
         boundary.draw();
     });
-    pass_boss.forEach((boss) => {
-        boss.draw();
-    });
-    
 
     player.draw();
     ennemy.draw();
@@ -460,5 +456,19 @@ function FirstMap() {
         });
         }
     }
+    
+    pancarte1.forEach((boundary) => {
+        if(rectangleCollision({
+            rectangle1: player,
+            rectangle2: boundary
+        })) {
+            document.querySelector('#pancarte1').style.display = 'block'
+            document.querySelector('#pancarteBox').style.display = 'block'
+            document.querySelector('#pancarteBox').innerHTML = 'Pancarte 1 text'
+        } else {
+            document.querySelector('#pancarte1').style.display = 'none'
+            document.querySelector('#pancarteBox').style.display = 'none'
+        }
+    });
 }
 FirstMap();
