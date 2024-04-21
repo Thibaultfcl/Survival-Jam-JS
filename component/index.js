@@ -302,13 +302,19 @@ function FirstMap() {
     ) {
         window.cancelAnimationFrame(animationID);
         audio.Map.stop();
-        audio.Transibattle.play();
-        // audio.Battle.play()
-        battle.initiated = true;
-        document.getElementById('transitionDiv').classList.add('show-transition');
-        document.getElementById('transitionDiv').addEventListener('animationend', function() {
-            animateBattle();
-        }, { once: true });
+        // audio.Transibattle.play();
+        // audio.Transibattle.stop();
+        audio.Battle.play()
+        if (battle.initiated = true) {
+            // battle.initiated = true;
+            document.getElementById('transitionDiv').classList.add('show-transition');
+            document.getElementById('transitionDiv').addEventListener('animationend', function() {
+                animateBattle();
+            }, { once: true });
+        } else {
+            audio.Battle.stop();
+            audio.Map.play();
+        }
     }
 
     //ennemy movement

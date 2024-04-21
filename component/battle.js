@@ -76,9 +76,10 @@ function animateBattle(ennemy) {
         ennemy.isDead = true
         window.cancelAnimationFrame(battleAnimationID);
         document.getElementById('battleElements').style.display = 'none';
-        firstMap();
+        FirstMap();
         return
     }
+
 
     document.getElementById('transitionDiv').classList.add('hide-transition');
     battleBackground.draw()
@@ -136,6 +137,7 @@ document.getElementById('Attack2Button').addEventListener('click', (event) => {
 function Tackle() {
     document.querySelector('#dialogueBox').style.display = 'block'
     document.querySelector('#dialogueBox').innerHTML = 'You used Tackle and dealed a total of 10 dmg'
+
     moveElementAnimated(playerWithSpells, -2, 750)
         .then(() => {
             return moveElementAnimated(playerWithSpells, +6, 500);

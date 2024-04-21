@@ -1,5 +1,5 @@
 class Sprite {
-    constructor({position, image, frames = {max: 1, hold: 10}, sprites, animate = false, health = 100, isEnnemy = false}) {
+    constructor({position, image, frames = {max: 1, hold: 10}, sprites, animate = false, health = 100, isEnnemy = false, isDead = false}) {
         this.position = position
         this.image = image
         this.frames = {...frames, val: 0, elapsed: 0}
@@ -13,9 +13,11 @@ class Sprite {
         this.opacity = 1
         this.health = health
         this.isEnnemy = isEnnemy
+        this.isDead = isDead
     }
 
     draw() {
+        if(this.isDead) return
         c.save()
         c.globalAlpha = this.opacity
         c.drawImage(
@@ -82,6 +84,9 @@ class Sprite {
                         moveElementAnimated(targets, -3.5, 500)
                     }
                     if (target.health <= 0) {
+                        if(this.isEnnemy){
+                            console.log("game over")
+                        }
                         target.opacity = 0;
                         battle.initiated = false
                     }
@@ -111,7 +116,7 @@ class Boundary {
     // }
 
     draw() {
-        c.fillStyle = "rgba(255, 0, 0, 0.5)"
+        c.fillStyle = "rgba(255, 0, 0, 0.0)"
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 }
