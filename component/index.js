@@ -196,7 +196,23 @@ ennemyBoundaries.push(
 //list for all monster
 const ennemies = [ennemy,ennemy2];
 
-const movables = [background, ...boundaries, foreground,...ennemyBoundaries,...ennemies];
+const pancarte1 = [];
+pancarte1.push(
+    new Boundary({
+        position: {
+            x: 4350,
+            y: 110
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 4398,
+            y: 110
+        }
+    })
+)
+
+const movables = [background, ...boundaries, foreground, ...ennemies, ...ennemyBoundaries, ...pancarte1];
 
 function rectangleCollision({ rectangle1, rectangle2 }) {
     return (
@@ -290,6 +306,9 @@ function firstMap() {
         boundary.draw();
     });
     ennemyBoundaries.forEach((boundary) => {
+        boundary.draw();
+    });
+    pancarte1.forEach((boundary) => {
         boundary.draw();
     });
 
@@ -424,6 +443,20 @@ function firstMap() {
             });
         }
     }
+    
+    pancarte1.forEach((boundary) => {
+        if(rectangleCollision({
+            rectangle1: player,
+            rectangle2: boundary
+        })) {
+            document.querySelector('#pancarte1').style.display = 'block'
+            document.querySelector('#pancarteBox').style.display = 'block'
+            document.querySelector('#pancarteBox').innerHTML = 'Pancarte 1 text'
+        } else {
+            document.querySelector('#pancarte1').style.display = 'none'
+            document.querySelector('#pancarteBox').style.display = 'none'
+        }
+    });
 }
 firstMap();
 
