@@ -41,10 +41,6 @@ const playerBattle = new Sprite({
         y: 375
     },
     image: playerImgBattle,
-    initialPosition: {
-        x: 200,
-        y: 375
-    }
 });
 
 const shield = new Sprite({
@@ -53,10 +49,6 @@ const shield = new Sprite({
         y: 250
     },
     image: shieldImg,
-    initialPosition: {
-        x: 85,
-        y: 250
-    }
 });
 
 const darkSpear = new Sprite({
@@ -70,10 +62,6 @@ const darkSpear = new Sprite({
         hold: 10
     },
     animate: true,
-    initialPosition: {
-        x: 225,
-        y: 300
-    }
 });
 
 
@@ -82,17 +70,6 @@ let shieldActivated = false
 let darkSpearActivated = false
 let attackEnnemy = false
 
-function resetBattleSprites() {
-    playerBattle.position.x = playerBattle.initialPosition.x;
-    playerBattle.position.y = playerBattle.initialPosition.y;
-    shield.position.x = shield.initialPosition.x;
-    shield.position.y = shield.initialPosition.y;
-    ennemyBattle.position.x = 700;
-    ennemyBattle.position.y = 350;
-}
-
-let battleAnimationID;
-
 function animateBattle() {
     battleAnimationID = window.requestAnimationFrame(animateBattle);
 
@@ -100,6 +77,10 @@ function animateBattle() {
         ennemy.isDead = true;
         window.cancelAnimationFrame(battleAnimationID);
         document.getElementById('battleElements').style.display = 'none';
+        // Arrêtez la musique de combat
+        audio.Battle.stop();
+        // Reprenez la musique de la carte
+        audio.Map.play();
         
         moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
             firstMap(); // Revenir à la carte principale

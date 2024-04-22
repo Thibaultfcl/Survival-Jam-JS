@@ -28,7 +28,7 @@ function checkEnemyCollision(animationID) {
     ) {
         window.cancelAnimationFrame(animationID);
         audio.Map.stop();
-        audio.Transibattle.play();
+        audio.Battle.play();
         battle.initiated = true;
         document.getElementById('transitionDiv').classList.add('show-transition');
         document.getElementById('transitionDiv').addEventListener('animationend', function() {
