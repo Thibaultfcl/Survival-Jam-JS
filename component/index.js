@@ -57,6 +57,42 @@ function moveEnemy(ennemyBoundaries) {
     });
 }
 
+function pancartes() {
+    document.querySelector('#pancartes').style.display = 'none'
+    document.querySelector('#pancarteBox').style.display = 'none'
+
+    pancarte1.forEach((boundary) => {
+        if(rectangleCollision({
+            rectangle1: player,
+            rectangle2: boundary
+        })) {
+            document.querySelector('#pancartes').style.display = 'block'
+            document.querySelector('#pancarteBox').style.display = 'block'
+            document.querySelector('#pancarteBox').innerHTML = 'Pancarte 1 text'
+        }
+    });
+    pancarte2.forEach((boundary) => {
+        if(rectangleCollision({
+            rectangle1: player,
+            rectangle2: boundary
+        })) {
+            document.querySelector('#pancartes').style.display = 'block'
+            document.querySelector('#pancarteBox').style.display = 'block'
+            document.querySelector('#pancarteBox').innerHTML = 'Pancarte 2 text'
+        }
+    });
+    pancarte3.forEach((boundary) => {
+        if(rectangleCollision({
+            rectangle1: player,
+            rectangle2: boundary
+        })) {
+            document.querySelector('#pancartes').style.display = 'block'
+            document.querySelector('#pancarteBox').style.display = 'block'
+            document.querySelector('#pancarteBox').innerHTML = 'Pancarte 3 text'
+        }
+    });
+}
+
 
 addEventListener('click', startAudio);
 
@@ -212,7 +248,45 @@ pancarte1.push(
     })
 )
 
-const movables = [background, ...boundaries, foreground, ...ennemies, ...ennemyBoundaries, ...pancarte1];
+const pancarte2 = [];
+pancarte2.push(
+    new Boundary({
+        position: {
+            x: 4850,
+            y: 150
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 4898,
+            y: 150
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 4946,
+            y: 150
+        }
+    }),
+)
+
+const pancarte3 = [];
+pancarte3.push(
+    new Boundary({
+        position: {
+            x: 5260,
+            y: 110
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 5308,
+            y: 110
+        }
+    })
+)
+
+const movables = [background, ...boundaries, foreground, ...ennemies, ...ennemyBoundaries, ...pancarte1, ...pancarte2, ...pancarte3];
 
 function rectangleCollision({ rectangle1, rectangle2 }) {
     return (
@@ -427,6 +501,12 @@ function firstMap() {
     pancarte1.forEach((boundary) => {
         boundary.draw();
     });
+    pancarte2.forEach((boundary) => {
+        boundary.draw();
+    });
+    pancarte3.forEach((boundary) => {
+        boundary.draw();
+    });
 
     player.draw();
     ennemy.draw();
@@ -445,19 +525,6 @@ function firstMap() {
     checkEnemyCollision(animationID)
     moveEnemy(ennemyBoundaries)
     deplacement()
-    
-    pancarte1.forEach((boundary) => {
-        if(rectangleCollision({
-            rectangle1: player,
-            rectangle2: boundary
-        })) {
-            document.querySelector('#pancarte1').style.display = 'block'
-            document.querySelector('#pancarteBox').style.display = 'block'
-            document.querySelector('#pancarteBox').innerHTML = 'Pancarte 1 text'
-        } else {
-            document.querySelector('#pancarte1').style.display = 'none'
-            document.querySelector('#pancarteBox').style.display = 'none'
-        }
-    });
+    pancartes()
 }
 firstMap();
