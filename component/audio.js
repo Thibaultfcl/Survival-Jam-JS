@@ -1,11 +1,16 @@
 const audio = {
     Map: new Howl({
-        src: "./audio/effect.mp3",
+        src: "./audio/horreur.mp3",
+        html5: true,
+        volume: 0.4
+    }),
+    IniBattle: new Howl({
+        src: "./audio/trans.mp3",
         html5: true,
         volume: 0.4
     }),
     Battle: new Howl({
-        src: "./audio/uk.mp3",
+        src: "./audio/horreur.mp3",
         html5: true,
         volume: 0.4
     })

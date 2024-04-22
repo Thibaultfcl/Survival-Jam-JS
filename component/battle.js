@@ -78,9 +78,10 @@ function animateBattle() {
         window.cancelAnimationFrame(battleAnimationID);
         document.getElementById('battleElements').style.display = 'none';
         // Arrêtez la musique de combat
-        audio.Battle.stop();
+        // audio.Battle.stop();
+        audio.IniBattle.play();
         // Reprenez la musique de la carte
-        audio.Map.play();
+        // audio.Map.play();
         
         moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
             firstMap(); // Revenir à la carte principale
@@ -104,7 +105,7 @@ function animateBattle() {
     }
 
     // Si la santé de l'ennemi est zéro, fin du combat
-    if (ennemy.health <= 0) {
+    if (ennemies.health <= 0) {
         battle.initiated = false;
     }
 }
