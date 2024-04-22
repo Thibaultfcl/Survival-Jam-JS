@@ -526,5 +526,8 @@ function firstMap() {
     moveEnemy(ennemyBoundaries)
     deplacement()
     pancartes()
+
+    document.querySelector('#Attack1Button').innerHTML = selectedSpells[0]
+    document.querySelector('#Attack2Button').innerHTML = selectedSpells[1]
 }
 firstMap();

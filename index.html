@@ -19,12 +19,14 @@
       <div id="transitionDiv" class="transition"></div>
 
       <!-- inventory -->
-      <div id="inventoryNPC" style="display: none">
-        <img src="img/photochat.png" alt="Inventaire" />
+      <div id="inventory" style="display: none">
+        <div class="inventory-content">
+          <h2>Spell learned :</h2>
+          <div id="spells-container"></div>
+        </div>
       </div>
-      <div id="inventoryNPC" style="display: none">
-        <img src="img/photochat.png" alt="Inventaire" />
-      </div>
+
+      <!-- lose -->
       <div id="gameOverDiv" style="display: none">
         <h1>Game Over</h1>
         <button id="playAgainButton">Play Again</button>
@@ -182,8 +184,8 @@
     <script src="/component/collision.js"></script>
     <script src="/component/audio.js"></script>
     <script src="/component/classe.js"></script>
+    <script src="component/inventory.js"></script>
     <script src="/component/battle.js"></script>
     <script src="/component/index.js"></script>
-    <script src="component/inventory.js"></script>
   </body>
 </html>

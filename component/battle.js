@@ -154,50 +154,60 @@ function moveElementAnimated(elements, deltaX, duration) {
     });
 }
 
+const spellFunctions = {
+    Tackle: () => {
+        document.querySelector('#dialogueBox').style.display = 'block'
+        document.querySelector('#dialogueBox').innerHTML = 'You used Tackle and dealed a total of 10 dmg'
+
+        moveElementAnimated(playerWithSpells, -2, 750)
+            .then(() => {
+                return moveElementAnimated(playerWithSpells, +6, 500);
+            })
+            .then(() => {
+                playerBattle.attack({
+                    attack: {
+                        name: 'Tackle',
+                        damage: 50,
+                    },
+                    target: ennemyBattle
+                });
+                return moveElementAnimated(playerWithSpells, -2, 750);
+            })
+            .then(() => {
+                shieldActivated = false;
+            });
+        attackEnnemy = true;
+    },
+    Shield: () => {
+        document.querySelector('#dialogueBox').style.display = 'block'
+        document.querySelector('#dialogueBox').innerHTML = 'You used Shield, the next ammount of dammage you take will be canceled'
+        shieldActivated = true;
+        attackEnnemy = true;
+    },
+};
+
+function castEquippedSpell(equippedSpell) {
+    const spellFunction = spellFunctions[equippedSpell];
+    if (spellFunction) {
+        spellFunction();
+    } else {
+        console.error('No function found for the equipped spell:', equippedSpell);
+    }
+}
+
 document.getElementById('Attack1Button').addEventListener('click', (event) => {
     const clickedButton = event.target;
     if (clickedButton.tagName === 'BUTTON') {
-        Tackle();
+        castEquippedSpell(selectedSpells[0])
     }
 });
 
 document.getElementById('Attack2Button').addEventListener('click', (event) => {
     const clickedButton = event.target;
     if (clickedButton.tagName === 'BUTTON') {
-        Shield();
+        castEquippedSpell(selectedSpells[1])
     }
 });
-
-function Tackle() {
-    document.querySelector('#dialogueBox').style.display = 'block'
-    document.querySelector('#dialogueBox').innerHTML = 'You used Tackle and dealed a total of 10 dmg'
-
-    moveElementAnimated(playerWithSpells, -2, 750)
-        .then(() => {
-            return moveElementAnimated(playerWithSpells, +6, 500);
-        })
-        .then(() => {
-            playerBattle.attack({
-                attack: {
-                    name: 'Tackle',
-                    damage: 50,
-                },
-                target: ennemyBattle
-            });
-            return moveElementAnimated(playerWithSpells, -2, 750);
-        })
-        .then(() => {
-            shieldActivated = false; // Réinitialiser shieldActivated
-        });
-    attackEnnemy = true;
-}
-
-function Shield() {
-    document.querySelector('#dialogueBox').style.display = 'block'
-    document.querySelector('#dialogueBox').innerHTML = 'You used Shield, the next ammount of dammage you take will be canceled'
-    shieldActivated = true;
-    attackEnnemy = true;
-}
 
 let index = 0
 function spellEnnemy1() {
