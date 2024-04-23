@@ -41,14 +41,16 @@ function checkEnemyCollision(animationID) {
 function moveEnemy(ennemyBoundaries) {
     ennemies.forEach(enemy => {
         if (enemy.movingLeft) {
-            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[0] })) {
+            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[0]})||
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[2] })) {
                 enemy.movingLeft = false;
                 enemy.image = enemy.sprites.left;
             } else {
                 enemy.position.x -= 0.5;
             }
         } else {
-            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[1] })) {
+            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[1]})||
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[3]})) {
                 enemy.movingLeft = true;
                 enemy.image = enemy.sprites.right;
             } else {
@@ -227,6 +229,18 @@ ennemyBoundaries.push(
         position: {
             x: 1900,
             y: 110
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 900,
+            y: -100
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 1500,
+            y: -100
         }
     })
 );
