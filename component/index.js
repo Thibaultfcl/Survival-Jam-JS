@@ -18,8 +18,51 @@ function startAudio() {
         audioStarted = true;
     }
 }
+function createEnemy(x, y, image, frames, imageLeft, framesLeft, imageRight, framesRight, motion) {
+    const sprites = imageLeft !== imageRight ? { left: imageLeft, right: imageRight } : { left: image, right: image };
+    const framesSprites = imageLeft !== imageRight ? { left: framesLeft, right: framesRight } : { left: frames, right: frames };
+
+    const enemy = new Sprite({
+        position: { x, y },
+        image: image,
+        frames: frames,
+        sprites: sprites,
+        animate: true
+    });
+
+    if (motion) {
+        ennemieswithmotion.push(enemy);
+    } else {
+        ennemiesmotionless.push(enemy);
+    }
+
+
+    return enemy;
+}
+
+//list for all monster with motion and motionless
+const ennemieswithmotion = [];
+const ennemiesmotionless = [];
+
 function checkEnemyCollision(animationID) {
-    ennemies.forEach(enemy => {
+    ennemieswithmotion.forEach(enemy => {
+    if (
+        rectangleCollision({
+            rectangle1: player,
+            rectangle2: enemy
+        }) && !enemy.isDead
+    ) {
+        window.cancelAnimationFrame(animationID);
+        audio.Map.stop();
+        audio.Transibattle.play();
+        battle.initiated = true;
+        document.getElementById('transitionDiv').classList.add('show-transition');
+        document.getElementById('transitionDiv').addEventListener('animationend', function() {
+            animateBattle(enemy);
+        }, { once: true });
+    }
+});
+    ennemiesmotionless.forEach(enemy => {
     if (
         rectangleCollision({
             rectangle1: player,
@@ -37,11 +80,13 @@ function checkEnemyCollision(animationID) {
     }
 });
 }
+
 function moveEnemy(ennemyBoundaries) {
-    ennemies.forEach(enemy => {
+    ennemieswithmotion.forEach(enemy => {
         if (enemy.movingLeft) {
             if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[0]})||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[2] })) {
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[2] })||
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[4] })) {
                 enemy.movingLeft = false;
                 enemy.image = enemy.sprites.left;
             } else {
@@ -49,7 +94,8 @@ function moveEnemy(ennemyBoundaries) {
             }
         } else {
             if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[1]})||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[3]})) {
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[3]})||
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[5]})) {
                 enemy.movingLeft = true;
                 enemy.image = enemy.sprites.right;
             } else {
@@ -128,6 +174,15 @@ ennemy2Image.src = "./img/ennemy.png";
 const ennemy2Image2 = new Image();
 ennemy2Image2.src = "./img/ennemy2.png";
 
+const ennemy3Image = new Image();
+ennemy3Image.src = "./img/demonright.png";
+
+const ennemy3Image2 = new Image();
+ennemy3Image2.src = "./img/demonleft.png";
+
+const ennemy4Image = new Image();
+ennemy4Image.src = "./img/Evilgod.png"
+
 const player = new Sprite({
     position: {
         x: canvas.width / 2 - 192 / 4 / 2,
@@ -146,39 +201,10 @@ const player = new Sprite({
     }
 });
 
-const ennemy = new Sprite({
-    position: {
-        x: 1200,
-        y: 80,
-    },
-    image: ennemyImage,
-    frames: {
-        max: 13,
-        hold: 10
-    },
-    sprites: {
-        left: ennemyImage,
-        right: ennemyImage2,
-    },
-    animate: true
-});
-
-const ennemy2 = new Sprite({
-    position: {
-        x: 1100,
-        y: -145,
-    },
-    image: ennemy2Image,
-    frames: {
-        max: 13,
-        hold: 10
-    },
-    sprites: {
-        left: ennemy2Image,
-        right: ennemy2Image2,
-    },
-    animate: true
-});
+createEnemy(1200, 80, ennemyImage, { max: 13, hold: 10 }, ennemy2Image, { max: 13, hold: 10 }, ennemy2Image2, { max: 13, hold: 10 }, true); 
+createEnemy(1100, -150, ennemy2Image, { max: 13, hold: 10 }, ennemy2Image, { max: 13, hold: 10 }, ennemy2Image2, { max: 13, hold: 10 }, true); 
+createEnemy(300, -680, ennemy3Image, { max: 6, hold: 50 }, ennemy3Image, { max: 6, hold: 50 }, ennemy3Image2, { max: 6, hold: 40 }, true); 
+createEnemy(5050, -750, ennemy4Image, { max: 1, hold: 1 }, ennemy4Image, { max: 1, hold: 1 }, ennemy4Image, { max: 1, hold: 1 }, false); 
 
 const background = new Sprite({
     position: {
@@ -241,11 +267,20 @@ ennemyBoundaries.push(
             x: 1500,
             y: -100
         }
+    }),
+    new Boundary({
+        position: {
+            x: 220,
+            y: -600
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 800,
+            y: -600
+        }
     })
 );
-//list for all monster
-const ennemies = [ennemy,ennemy2];
-
 const pancarte1 = [];
 pancarte1.push(
     new Boundary({
@@ -300,7 +335,7 @@ pancarte3.push(
     })
 )
 
-const movables = [background, ...boundaries, foreground, ...ennemies, ...ennemyBoundaries, ...pancarte1, ...pancarte2, ...pancarte3];
+const movables = [background, ...boundaries, foreground, ...ennemieswithmotion, ...ennemiesmotionless, ...ennemyBoundaries, ...pancarte1, ...pancarte2, ...pancarte3];
 
 function rectangleCollision({ rectangle1, rectangle2 }) {
     return (
@@ -523,8 +558,8 @@ function firstMap() {
     });
 
     player.draw();
-    ennemy.draw();
-    ennemy2.draw();
+    ennemieswithmotion.forEach(enemy => enemy.draw()); //draw every monster with motion
+    ennemiesmotionless.forEach(enemy => enemy.draw()); //draw every monster motionless
     foreground.draw();
 
     // let moving = true;
@@ -532,11 +567,12 @@ function firstMap() {
     
     //battle
     if (battle.initiated) {
-        animateBattle(ennemies); // Appeler animateBattle seulement si le combat est initié
+        animateBattle(ennemieswithmotion,ennemiesmotionless); // Appeler animateBattle seulement si le combat est initié
         return;
     }
+
     
-    checkEnemyCollision(animationID)
+    //checkEnemyCollision(animationID)
     moveEnemy(ennemyBoundaries)
     deplacement()
     pancartes()
