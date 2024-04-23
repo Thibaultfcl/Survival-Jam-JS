@@ -1,5 +1,5 @@
 class Sprite {
-    constructor({position, image, frames = {max: 1, hold: 10}, sprites, animate = false, health = 100, isEnnemy = false, isDead = false}) {
+    constructor({position, image, frames = {max: 1, hold: 10}, sprites, animate = false, health = 100, isEnnemy = false, isDead = false, attackName}) {
         this.position = position
         this.image = image
         this.frames = {...frames, val: 0, elapsed: 0}
@@ -14,6 +14,7 @@ class Sprite {
         this.health = health
         this.isEnnemy = isEnnemy
         this.isDead = isDead
+        this.attackName = attackName
     }
 
     draw() {
