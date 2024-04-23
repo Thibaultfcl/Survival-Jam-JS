@@ -20,22 +20,22 @@ function startAudio() {
 }
 function checkEnemyCollision(animationID) {
     ennemies.forEach(enemy => {
-    if (
-        rectangleCollision({
-            rectangle1: player,
-            rectangle2: enemy
-        }) && !enemy.isDead
-    ) {
-        window.cancelAnimationFrame(animationID);
-        audio.Map.stop();
-        audio.Transibattle.play();
-        battle.initiated = true;
-        document.getElementById('transitionDiv').classList.add('show-transition');
-        document.getElementById('transitionDiv').addEventListener('animationend', function() {
-            animateBattle(enemy);
-        }, { once: true });
-    }
-});
+        if (
+            rectangleCollision({
+                rectangle1: player,
+                rectangle2: enemy
+            }) && !enemy.isDead
+        ) {
+            window.cancelAnimationFrame(animationID);
+            audio.Map.stop();
+            audio.Transibattle.play();
+            battle.initiated = true;
+            document.getElementById('transitionDiv').classList.add('show-transition');
+            document.getElementById('transitionDiv').addEventListener('animationend', function() {
+                animateBattle();
+            }, { once: true });
+        }
+    });
 }
 function moveEnemy(ennemyBoundaries) {
     ennemies.forEach(enemy => {
@@ -532,7 +532,6 @@ function firstMap() {
     
     //battle
     if (battle.initiated) {
-        animateBattle(ennemies); // Appeler animateBattle seulement si le combat est initié
         return;
     }
     

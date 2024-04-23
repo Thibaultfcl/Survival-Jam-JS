@@ -32,7 +32,8 @@ const ennemyBattle = new Sprite({
         hold: 20
     },
     animate: true,
-    isEnnemy: true
+    isEnnemy: true,
+    attackName: 'enemy1'
 })
 
 const playerBattle = new Sprite({
@@ -96,6 +97,7 @@ let battleAnimationID;
 function animateBattle() {
     battleAnimationID = window.requestAnimationFrame(animateBattle);
 
+    console.log("battle")
     if (!battle.initiated) {
         ennemy.isDead = true;
         window.cancelAnimationFrame(battleAnimationID);
@@ -103,8 +105,9 @@ function animateBattle() {
         
         moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
             firstMap(); // Revenir à la carte principale
-            document.querySelector('#userInterface').style.display = 'none';
             deplacement(); // Réinitialiser les positions des sprites
+            document.getElementById('transitionDiv').classList.remove('hide-transition');
+            document.getElementById('transitionDiv').classList.remove('show-transition');
         });
 
         return;
@@ -125,6 +128,10 @@ function animateBattle() {
     // Si la santé de l'ennemi est zéro, fin du combat
     if (ennemy.health <= 0) {
         battle.initiated = false;
+    }
+    if (playerBattle.health <= 0) {
+        battle.initiated = false;
+        document.getElementById('gameOverDiv').style.display = 'block';
     }
 }
 
@@ -210,35 +217,46 @@ document.getElementById('Attack2Button').addEventListener('click', (event) => {
 });
 
 let index = 0
-function spellEnnemy1() {
-    const attackArray = [5, 5, 100]
-    const attackDmg = attackArray[index]
-    index ++
-    if(index > attackArray.length-1) index = 0
+const spellFunctionsEnemy = {
+    enemy1 : () => {
+        const attackArray = [5, 5, 100]
+        const attackDmg = attackArray[index]
+        index ++
+        if(index > attackArray.length-1) index = 0
 
-    document.querySelector('#dialogueBox').style.display = 'block'
-    if(shieldActivated) {
-        document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. Your sield blocked the dammage'
-    } else {
-        document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. You lost ' + attackDmg + ' hp'
+        document.querySelector('#dialogueBox').style.display = 'block'
+        if(shieldActivated) {
+            document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. Your sield blocked the dammage'
+        } else {
+            document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. You lost ' + attackDmg + ' hp'
+        }
+
+        darkSpearActivated = true
+        if(shieldActivated) darkSpearActivated = false
+        darkSpear.frames.val = 0
+
+        ennemyBattle.attack({
+            attack: {
+                name: 'Dark Spear',
+                damage: attackDmg,
+            },
+            target: playerBattle
+        });
     }
+}
 
-    darkSpearActivated = true
-    if(shieldActivated) darkSpearActivated = false
-    darkSpear.frames.val = 0
-
-    ennemyBattle.attack({
-        attack: {
-            name: 'Dark Spear',
-            damage: attackDmg,
-        },
-        target: playerBattle
-    });
+function castEnemySpell(enemy) {
+    const spellFunction = spellFunctionsEnemy[enemy.attackName];
+    if (spellFunction) {
+        spellFunction();
+    } else {
+        console.error('No function found for this spell:', enemy.attackName);
+    }
 }
 
 document.querySelector('#dialogueBox').addEventListener('click', ()=>{
     document.querySelector('#dialogueBox').style.display = 'none'
-    if(attackEnnemy && ennemyBattle.health > 0) spellEnnemy1()
+    if(attackEnnemy && ennemyBattle.health > 0) castEnemySpell(ennemyBattle)
     attackEnnemy = false
 })
 
