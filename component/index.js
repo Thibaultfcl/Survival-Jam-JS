@@ -18,6 +18,7 @@ function startAudio() {
         audioStarted = true;
     }
 }
+
 function checkEnemyCollision(animationID) {
     ennemies.forEach(enemy => {
     if (
@@ -27,9 +28,7 @@ function checkEnemyCollision(animationID) {
         }) && !enemy.isDead
     ) {
         window.cancelAnimationFrame(animationID);
-        // audio.Map.stop();
         audio.IniBattle.play();
-        // audio.Battle.play();
         battle.initiated = true;
         document.getElementById('transitionDiv').classList.add('show-transition');
         document.getElementById('transitionDiv').addEventListener('animationend', function() {
@@ -38,6 +37,7 @@ function checkEnemyCollision(animationID) {
     }
 });
 }
+
 function moveEnemy(ennemyBoundaries) {
     ennemies.forEach(enemy => {
         if (enemy.movingLeft) {
@@ -527,7 +527,7 @@ function firstMap() {
     ennemy.draw();
     ennemy2.draw();
     foreground.draw();
-
+    
     //battle
     if (battle.initiated) {
         animateBattle(ennemies); // Appeler animateBattle seulement si le combat est initié

@@ -73,11 +73,7 @@ let attackEnnemy = false
 function combat() {
     window.cancelAnimationFrame(battleAnimationID);
     document.getElementById('battleElements').style.display = 'none';
-    // Arrêtez la musique de combat
-    // audio.Battle.stop();
     audio.IniBattle.play();
-    // Reprenez la musique de la carte
-    // audio.Map.play();
         
     moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
         firstMap(); // Revenir à la carte principale
@@ -86,7 +82,6 @@ function combat() {
     });
     return;
 }
-
 
 function animateBattle() {
     battleAnimationID = window.requestAnimationFrame(animateBattle);
@@ -110,7 +105,7 @@ function animateBattle() {
     }
 
     // Si la santé de l'ennemi est zéro, fin du combat
-    if (ennemies.health <= 0) {
+    if (ennemy.health <= 0) {
         battle.initiated = false;
     }
 }
@@ -228,4 +223,3 @@ document.querySelector('#dialogueBox').addEventListener('click', ()=>{
     if(attackEnnemy && ennemyBattle.health > 0) spellEnnemy1()
     attackEnnemy = false
 })
-
