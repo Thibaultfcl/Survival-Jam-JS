@@ -108,3 +108,27 @@ button:hover {
   background-color: rgba(206, 206, 206, 0.5);
   cursor: pointer;
 }
+
+#inventory {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  color: rgb(0, 0, 0);
+  width: 280px;
+  height: auto;
+  text-align: center;
+  z-index: 1000;
+}
+
+.inventory-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.spell-item {
+  margin-bottom: 10px;
+}

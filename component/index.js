@@ -514,12 +514,9 @@ function firstMap() {
     ennemy2.draw();
     foreground.draw();
 
-    // let moving = true;
-    // player.animate = false
-    
     //battle
     if (battle.initiated) {
-        animateBattle(ennemy); // Appeler animateBattle seulement si le combat est initié
+        animateBattle(ennemies); // Appeler animateBattle seulement si le combat est initié
         return;
     }
     
@@ -527,5 +524,8 @@ function firstMap() {
     moveEnemy(ennemyBoundaries)
     deplacement()
     pancartes()
+
+    document.querySelector('#Attack1Button').innerHTML = selectedSpells[0]
+    document.querySelector('#Attack2Button').innerHTML = selectedSpells[1]
 }
 firstMap();

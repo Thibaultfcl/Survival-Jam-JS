@@ -70,25 +70,30 @@ let shieldActivated = false
 let darkSpearActivated = false
 let attackEnnemy = false
 
+function combat() {
+    window.cancelAnimationFrame(battleAnimationID);
+    document.getElementById('battleElements').style.display = 'none';
+    // Arrêtez la musique de combat
+    // audio.Battle.stop();
+    audio.IniBattle.play();
+    // Reprenez la musique de la carte
+    // audio.Map.play();
+        
+    moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
+        firstMap(); // Revenir à la carte principale
+        document.querySelector('#userInterface').style.display = 'none';
+        deplacement(); // Réinitialiser les positions des sprites
+    });
+    return;
+}
+
+
 function animateBattle() {
     battleAnimationID = window.requestAnimationFrame(animateBattle);
 
     if (!battle.initiated) {
         ennemy.isDead = true;
-        window.cancelAnimationFrame(battleAnimationID);
-        document.getElementById('battleElements').style.display = 'none';
-        // Arrêtez la musique de combat
-        // audio.Battle.stop();
-        audio.IniBattle.play();
-        // Reprenez la musique de la carte
-        // audio.Map.play();
-        
-        moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
-            firstMap(); // Revenir à la carte principale
-            document.querySelector('#userInterface').style.display = 'none';
-            deplacement(); // Réinitialiser les positions des sprites
-        });
-
+        combat();
         return;
     }
 
@@ -136,50 +141,60 @@ function moveElementAnimated(elements, deltaX, duration) {
     });
 }
 
+const spellFunctions = {
+    Tackle: () => {
+        document.querySelector('#dialogueBox').style.display = 'block'
+        document.querySelector('#dialogueBox').innerHTML = 'You used Tackle and dealed a total of 10 dmg'
+
+        moveElementAnimated(playerWithSpells, -2, 750)
+            .then(() => {
+                return moveElementAnimated(playerWithSpells, +6, 500);
+            })
+            .then(() => {
+                playerBattle.attack({
+                    attack: {
+                        name: 'Tackle',
+                        damage: 50,
+                    },
+                    target: ennemyBattle
+                });
+                return moveElementAnimated(playerWithSpells, -2, 750);
+            })
+            .then(() => {
+                shieldActivated = false;
+            });
+        attackEnnemy = true;
+    },
+    Shield: () => {
+        document.querySelector('#dialogueBox').style.display = 'block'
+        document.querySelector('#dialogueBox').innerHTML = 'You used Shield, the next ammount of dammage you take will be canceled'
+        shieldActivated = true;
+        attackEnnemy = true;
+    },
+};
+
+function castEquippedSpell(equippedSpell) {
+    const spellFunction = spellFunctions[equippedSpell];
+    if (spellFunction) {
+        spellFunction();
+    } else {
+        console.error('No function found for the equipped spell:', equippedSpell);
+    }
+}
+
 document.getElementById('Attack1Button').addEventListener('click', (event) => {
     const clickedButton = event.target;
     if (clickedButton.tagName === 'BUTTON') {
-        Tackle();
+        castEquippedSpell(selectedSpells[0])
     }
 });
 
 document.getElementById('Attack2Button').addEventListener('click', (event) => {
     const clickedButton = event.target;
     if (clickedButton.tagName === 'BUTTON') {
-        Shield();
+        castEquippedSpell(selectedSpells[1])
     }
 });
-
-function Tackle() {
-    document.querySelector('#dialogueBox').style.display = 'block'
-    document.querySelector('#dialogueBox').innerHTML = 'You used Tackle and dealed a total of 10 dmg'
-
-    moveElementAnimated(playerWithSpells, -2, 750)
-        .then(() => {
-            return moveElementAnimated(playerWithSpells, +6, 500);
-        })
-        .then(() => {
-            playerBattle.attack({
-                attack: {
-                    name: 'Tackle',
-                    damage: 50,
-                },
-                target: ennemyBattle
-            });
-            return moveElementAnimated(playerWithSpells, -2, 750);
-        })
-        .then(() => {
-            shieldActivated = false; // Réinitialiser shieldActivated
-        });
-    attackEnnemy = true;
-}
-
-function Shield() {
-    document.querySelector('#dialogueBox').style.display = 'block'
-    document.querySelector('#dialogueBox').innerHTML = 'You used Shield, the next ammount of dammage you take will be canceled'
-    shieldActivated = true;
-    attackEnnemy = true;
-}
 
 let index = 0
 function spellEnnemy1() {
