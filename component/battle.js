@@ -1,21 +1,13 @@
 const battleBackgroundImage = new Image()
-battleBackgroundImage.src = './img/bg.png'
-
+battleBackgroundImage.src = './img/combat.png'
 const ennemyImgBattle = new Image()
-ennemyImgBattle.src = './img/skeletonIdle.png'
-
+ennemyImgBattle.src = './img/SkeletoNIdle.png'
 const playerImgBattle = new Image()
 playerImgBattle.src = './img/playerRightBattle.png'
-
 const shieldImg = new Image()
 shieldImg.src = './img/shield.png'
-
 const darkSpearImg = new Image()
-darkSpearImg.src = './img/darkSpear.png'
-
-const lightningImg = new Image()
-lightningImg.src = './img/lightning.png'
-
+darkSpearImg.src = './img/Darkspear.png'
 const battleBackground = new Sprite({
     position: {
         x: -200,
@@ -23,7 +15,6 @@ const battleBackground = new Sprite({
     },
     image: battleBackgroundImage
 })
-
 const ennemyBattle = new Sprite({
     position: {
         x: 700,
@@ -50,7 +41,6 @@ const playerBattle = new Sprite({
         y: 375
     }
 });
-
 const shield = new Sprite({
     position: {
         x: 85,
@@ -61,8 +51,7 @@ const shield = new Sprite({
         x: 85,
         y: 250
     }
-}); 
-
+});
 const darkSpear = new Sprite({
     position: {
         x: 225,
@@ -79,30 +68,10 @@ const darkSpear = new Sprite({
         y: 300
     }
 });
-
-const lightning = new Sprite({
-    position: {
-        x: 650,
-        y: 300
-    },
-    image: lightningImg,
-    frames: {
-        max: 14,
-        hold: 10
-    },
-    animate: true,
-    initialPosition: {
-        x: 650,
-        y: 300
-    }
-})
-
 const playerWithSpells = [playerBattle, shield];
 let shieldActivated = false
 let darkSpearActivated = false
-let lightningActivated = false
 let attackEnnemy = false
-
 function resetBattleSprites() {
     playerBattle.position.x = playerBattle.initialPosition.x;
     playerBattle.position.y = playerBattle.initialPosition.y;
@@ -113,17 +82,17 @@ function resetBattleSprites() {
 }
 
 let battleAnimationID;
-
-function animateBattle(enemy) {
+function animateBattle() {
     battleAnimationID = window.requestAnimationFrame(animateBattle);
 
     console.log("battle")
     if (!battle.initiated) {
-        enemy.isDead = true;
+        ennemy.isDead = true;
         window.cancelAnimationFrame(battleAnimationID);
         document.getElementById('battleElements').style.display = 'none';
-        
+
         moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
+            audio.IniBattle.play();
             firstMap(); // Revenir à la carte principale
             deplacement(); // Réinitialiser les positions des sprites
             document.getElementById('transitionDiv').classList.remove('hide-transition');
@@ -132,27 +101,18 @@ function animateBattle(enemy) {
 
         return;
     }
-
     document.getElementById('transitionDiv').classList.add('hide-transition');
     battleBackground.draw();
     ennemyBattle.draw();
     playerBattle.draw();
     document.getElementById('battleElements').style.display = 'block';
-
     if (shieldActivated) shield.draw();
-
     if (darkSpearActivated) darkSpear.draw();
     if (darkSpear.frames.val == 19) {
         darkSpearActivated = false;
     }
-
-    if (lightningActivated) lightning.draw();
-    if (lightning.frames.val == 13) {
-        lightningActivated = false;
-    }
-
     // Si la santé de l'ennemi est zéro, fin du combat
-    if (enemy.health <= 0) {
+    if (ennemy.health <= 0) {
         battle.initiated = false;
     }
     if (playerBattle.health <= 0) {
@@ -217,22 +177,6 @@ const spellFunctions = {
         shieldActivated = true;
         attackEnnemy = true;
     },
-    Lightning: () => {
-        document.querySelector('#dialogueBox').style.display = 'block'
-        document.querySelector('#dialogueBox').innerHTML = 'You used dark spear and dealed a total of 80 dmg'
-
-        lightningActivated = true
-        lightning.frames.val = 0
-
-        playerBattle.attack({
-            attack: {
-                name: 'Lightning',
-                damage: 80,
-            },
-            target: ennemyBattle
-        });
-        attackEnnemy = true;
-    }
 };
 
 function castEquippedSpell(equippedSpell) {
@@ -243,14 +187,20 @@ function castEquippedSpell(equippedSpell) {
         console.error('No function found for the equipped spell:', equippedSpell);
     }
 }
-
+function castEquippedSpell(equippedSpell) {
+    const spellFunction = spellFunctions[equippedSpell];
+    if (spellFunction) {
+        spellFunction();
+    } else {
+        console.error('No function found for the equipped spell:', equippedSpell);
+    }
+}
 document.getElementById('Attack1Button').addEventListener('click', (event) => {
     const clickedButton = event.target;
     if (clickedButton.tagName === 'BUTTON') {
         castEquippedSpell(selectedSpells[0])
     }
 });
-
 document.getElementById('Attack2Button').addEventListener('click', (event) => {
     const clickedButton = event.target;
     if (clickedButton.tagName === 'BUTTON') {
@@ -265,14 +215,12 @@ const spellFunctionsEnemy = {
         const attackDmg = attackArray[index]
         index ++
         if(index > attackArray.length-1) index = 0
-
         document.querySelector('#dialogueBox').style.display = 'block'
         if(shieldActivated) {
             document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. Your sield blocked the dammage'
         } else {
             document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. You lost ' + attackDmg + ' hp'
         }
-
         darkSpearActivated = true
         if(shieldActivated) darkSpearActivated = false
         darkSpear.frames.val = 0

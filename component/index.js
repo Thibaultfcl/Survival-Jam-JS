@@ -1,56 +1,21 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
-
 canvas.width = 1024;
 canvas.height = 576;
-
 const offset = {
     x: -450,
     y: -2722
 };
-
 //music
 let audioStarted = false;
-
 function startAudio() {
     if (!audioStarted) {
         audio.Map.play();
         audioStarted = true;
     }
 }
-function createEnemy(x, y, image, frames, imageLeft, framesLeft, imageRight, framesRight, motion, moveVertically) {
-    const sprites = imageLeft !== imageRight ? { left: imageLeft, right: imageRight } : { left: image, right: image };
-    const framesSprites = imageLeft !== imageRight ? { left: framesLeft, right: framesRight } : { left: frames, right: frames };
-
-    const enemy = new Sprite({
-        position: { x, y },
-        image: image,
-        frames: frames,
-        sprites: sprites,
-        animate: true
-    });
-
-    if (motion) {
-        ennemieswithmotion.push(enemy);
-    } else {
-        ennemiesmotionless.push(enemy);
-    }
-    
-    if(moveVertically){
-        enemy.moveVertically = true;
-        ennemieswithmotionvertically.push(enemy);
-    }
-    return enemy;
-}
-
-
-//list for all monster with motion and motionless
-const ennemieswithmotion = [];
-const ennemieswithmotionvertically = [];
-const ennemiesmotionless = [];
-
 function checkEnemyCollision(animationID) {
-    ennemieswithmotion.forEach(enemy => {
+    ennemies.forEach(enemy => {
         if (
             rectangleCollision({
                 rectangle1: player,
@@ -62,47 +27,24 @@ function checkEnemyCollision(animationID) {
             battle.initiated = true;
             document.getElementById('transitionDiv').classList.add('show-transition');
             document.getElementById('transitionDiv').addEventListener('animationend', function() {
-                animateBattle(enemy); // Pass the enemy object to animateBattle
-            }, { once: true });
-        }
-    });
-    ennemiesmotionless.forEach(enemy => {
-        if (
-            rectangleCollision({
-                rectangle1: player,
-                rectangle2: enemy
-            }) && !enemy.isDead
-        ) {
-            window.cancelAnimationFrame(animationID);
-            audio.IniBattle.play();
-            battle.initiated = true;
-            document.getElementById('transitionDiv').classList.add('show-transition');
-            document.getElementById('transitionDiv').addEventListener('animationend', function() {
-                animateBattle(enemy); // Pass the enemy object to animateBattle
+                animateBattle();
             }, { once: true });
         }
     });
 }
-
 function moveEnemy(ennemyBoundaries) {
-    ennemieswithmotion.forEach(enemy => {
+    ennemies.forEach(enemy => {
         if (enemy.movingLeft) {
-            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[0]}) ||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[2] }) ||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[4] })||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[8] })||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[10] })) {
+            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[0]})||
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[2] })) {
                 enemy.movingLeft = false;
                 enemy.image = enemy.sprites.left;
             } else {
                 enemy.position.x -= 0.5;
             }
         } else {
-            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[1]}) ||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[3]}) ||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[5]}) ||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[9]})||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[11]})) {
+            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[1]})||
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[3]})) {
                 enemy.movingLeft = true;
                 enemy.image = enemy.sprites.right;
             } else {
@@ -111,31 +53,9 @@ function moveEnemy(ennemyBoundaries) {
         }
     });
 }
-
-    /*ennemieswithmotionvertically.forEach(enemy => {
-        if (enemy.moveVertically) {
-            let collisionTop = rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[6]});
-            let collisionBottom = rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[7]});
-
-            if (collisionTop || collisionBottom) {
-                if (collisionTop) {
-                    enemy.position.y -= 0.5;
-                }
-                if (collisionBottom) {
-                    enemy.position.y += 0.5; 
-                }
-            }
-        }
-    });
-
-}
-*/
-
-
 function pancartes() {
     document.querySelector('#pancartes').style.display = 'none'
     document.querySelector('#pancarteBox').style.display = 'none'
-
     pancarte1.forEach((boundary) => {
         if(rectangleCollision({
             rectangle1: player,
@@ -167,78 +87,64 @@ function pancartes() {
         }
     });
 }
-
-
 addEventListener('click', startAudio);
-
 const image = new Image();
 image.src = "./img/map.png";
-
 const foregroundImage = new Image();
 foregroundImage.src = "./img/foreground.png";
-
 const playerDownImage = new Image();
-playerDownImage.src = "./img/playerDown.png";
-
+playerDownImage.src = "./img/PlayerDown.png";
 const playerUpImage = new Image();
-playerUpImage.src = "./img/playerUp.png";
-
+playerUpImage.src = "./img/PlayerUp.png";
 const playerRightImage = new Image();
-playerRightImage.src = "./img/playerRight.png";
-
+playerRightImage.src = "./img/PlayerRight.png";
 const playerLeftImage = new Image();
-playerLeftImage.src = "./img/playerLeft.png";
+playerLeftImage.src = "./img/PlayerLeft.png";
 
 const ennemyImage = new Image();
-ennemyImage.src = "./img/ennemy.png";
+ennemyImage.src = "./img/Ennemy.png";
 
 const ennemyImage2 = new Image();
-ennemyImage2.src = "./img/ennemy2.png";
+ennemyImage2.src = "./img/Ennemy2.png";
 
 const ennemy2Image = new Image();
-ennemy2Image.src = "./img/ennemy.png";
+ennemy2Image.src = "./img/Ennemy.png";
 
 const ennemy2Image2 = new Image();
-ennemy2Image2.src = "./img/ennemy2.png";
+ennemy2Image2.src = "./img/Ennemy2.png";
 
 const ennemy3Image = new Image();
-ennemy3Image.src = "./img/demonright.png";
+ennemy3Image.src = "./img/Demonright.png";
 
 const ennemy3Image2 = new Image();
-ennemy3Image2.src = "./img/demonleft.png";
+ennemy3Image2.src = "./img/Demonleft.png";
 
 const ennemy4Image = new Image();
-ennemy4Image.src = "./img/Evilgod.png"
+ennemy4Image.src = "./img/evilgod.png"
 
 const ennemy5Image = new Image();
-ennemy5Image.src = "./img/hell-beast-idle-left.png";
+ennemy5Image.src = "./img/Hell-beast-idle-left.png";
 
 const ennemy5Image2 = new Image();
-ennemy5Image2.src = "./img/hell-beast-idle.png"
+ennemy5Image2.src = "./img/Hell-beast-idle.png"
 
 const ennemy6Image = new Image();
-ennemy6Image.src = "./img/hell-beast-idle-left.png";
+ennemy6Image.src = "./img/Hell-beast-idle-left.png";
 
 const ennemy6Image2 = new Image();
-ennemy6Image2.src = "./img/hell-beast-idle.png"
+ennemy6Image2.src = "./img/Hell-beast-idle.png"
 
 const ennemy7Image = new Image();
-ennemy7Image.src = "./img/ennemy.png";
+ennemy7Image.src = "./img/Ennemy.png";
 
 const ennemy7Image2 = new Image();
-ennemy7Image2.src = "./img/ennemy2.png";
+ennemy7Image2.src = "./img/Ennemy2.png";
 
 const ennemy8Image = new Image();
-ennemy8Image.src = "./img/ennemy.png";
+ennemy8Image.src = "./img/Ennemy.png";
 
 const ennemy8Image2 = new Image();
-ennemy8Image2.src = "./img/ennemy2.png";
-
-const ennemy9Image = new Image();
-ennemy9Image.src = "./img/BringerofDeathLeft.png";
-
-const ennemy9Image2 = new Image();
-ennemy9Image2.src = "./img/BringerofDeath.png";
+ennemy8Image2.src = "./img/Ennemy2.png";
 
 const player = new Sprite({
     position: {
@@ -257,17 +163,38 @@ const player = new Sprite({
         right: playerRightImage,
     }
 });
-
-createEnemy(1200, 80, ennemyImage, { max: 13, hold: 10 }, ennemy2Image, { max: 13, hold: 10 }, ennemy2Image2, { max: 13, hold: 10 }, true,false); // Skeleton 
-createEnemy(1100, -150, ennemy2Image, { max: 13, hold: 10 }, ennemy2Image, { max: 13, hold: 10 }, ennemy2Image2, { max: 13, hold: 10 }, true,false); //Skeleton
-createEnemy(300, -680, ennemy3Image, { max: 6, hold: 50 }, ennemy3Image, { max: 6, hold: 50 }, ennemy3Image2, { max: 6, hold: 40 }, true,false); //midboss
-createEnemy(5050, -750, ennemy4Image, { max: 1, hold: 1 }, ennemy4Image, { max: 1, hold: 1 }, ennemy4Image, { max: 1, hold: 1 }, false,false); // final boss
-createEnemy(1300, -600, ennemy5Image, { max: 6, hold: 30}, ennemy5Image, { max: 6, hold: 30 }, ennemy5Image2, { max: 6, hold: 30 }, false,false); //Hell beast
-createEnemy(1100, -700, ennemy6Image, { max: 6, hold: 30}, ennemy6Image, { max: 6, hold: 30 }, ennemy6Image2, { max: 6, hold: 30 }, false,false); //Hell beast
-createEnemy(3950, -300, ennemy7Image, { max: 13, hold: 10 }, ennemy7Image, { max: 13, hold: 10 }, ennemy7Image2, { max: 13, hold: 10}, false,true); // skeleton
-createEnemy(3500, -1400, ennemy8Image, { max: 13, hold: 10 }, ennemy8Image, { max: 13, hold: 10 }, ennemy8Image2, { max: 13, hold: 10}, true,false); //Skeleton
-createEnemy(4400, 600, ennemy9Image, { max: 8, hold: 30}, ennemy9Image, { max: 8, hold: 30}, ennemy9Image2, { max: 8, hold: 30}, true,false);
-
+const ennemy = new Sprite({
+    position: {
+        x: 1200,
+        y: 80,
+    },
+    image: ennemyImage,
+    frames: {
+        max: 13,
+        hold: 10
+    },
+    sprites: {
+        left: ennemyImage,
+        right: ennemyImage2,
+    },
+    animate: true
+});
+const ennemy2 = new Sprite({
+    position: {
+        x: 1100,
+        y: -145,
+    },
+    image: ennemy2Image,
+    frames: {
+        max: 13,
+        hold: 10
+    },
+    sprites: {
+        left: ennemy2Image,
+        right: ennemy2Image2,
+    },
+    animate: true
+});
 const background = new Sprite({
     position: {
         x: offset.x,
@@ -275,7 +202,6 @@ const background = new Sprite({
     },
     image: image
 });
-
 const foreground = new Sprite({
     position: {
         x: offset.x,
@@ -283,12 +209,10 @@ const foreground = new Sprite({
     },
     image: foregroundImage
 });
-
 const collisionMap = [];
 for (let i = 0; i < collision.length; i += 139) {
     collisionMap.push(collision.slice(i, 139 + i));
 }
-
 const boundaries = [];
 collisionMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
@@ -303,7 +227,6 @@ collisionMap.forEach((row, i) => {
             );
     });
 });
-
 const ennemyBoundaries = [];
 ennemyBoundaries.push(
     new Boundary({
@@ -379,7 +302,8 @@ ennemyBoundaries.push(
         }
     }),
 );
-
+//list for all monster
+const ennemies = [ennemy,ennemy2];
 const pancarte1 = [];
 pancarte1.push(
     new Boundary({
@@ -395,7 +319,6 @@ pancarte1.push(
         }
     })
 )
-
 const pancarte2 = [];
 pancarte2.push(
     new Boundary({
@@ -417,7 +340,6 @@ pancarte2.push(
         }
     }),
 )
-
 const pancarte3 = [];
 pancarte3.push(
     new Boundary({
@@ -433,9 +355,7 @@ pancarte3.push(
         }
     })
 )
-
-const movables = [background, ...boundaries, foreground, ...ennemieswithmotion, ...ennemiesmotionless, ...ennemyBoundaries, ...pancarte1, ...pancarte2, ...pancarte3];
-
+const movables = [background, ...boundaries, foreground, ...ennemies, ...ennemyBoundaries, ...pancarte1, ...pancarte2, ...pancarte3];
 function rectangleCollision({ rectangle1, rectangle2 }) {
     return (
         rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
@@ -444,7 +364,6 @@ function rectangleCollision({ rectangle1, rectangle2 }) {
         rectangle1.position.y + rectangle1.height >= rectangle2.position.y
     );
 }
-
 const keys = {
     z: {
         presser: false
@@ -459,7 +378,6 @@ const keys = {
         presser: false
     },
 };
-
 window.addEventListener('keydown', (e) => {
     switch (e.key) {
         case 'z':
@@ -484,7 +402,6 @@ window.addEventListener('keydown', (e) => {
             break;
     }
 });
-
 window.addEventListener('keyup', (e) => {
     switch (e.key) {
         case 'z':
@@ -509,20 +426,16 @@ window.addEventListener('keyup', (e) => {
             break;
     }
 });
-
 const battle = {
     initiated: false
 };
-
 let mooveLeft = true;
 let crosse = false;
 let passage_map_active = true;
 let isFirstMapVisible = true;
-
 function deplacement() {
     let moving = true;
     player.animate = false
-
     //player movement
     if (keys.z.presser) {
         player.animate = true;
@@ -545,7 +458,6 @@ function deplacement() {
                 break;
             }
         }
-
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.y += 5;
@@ -572,7 +484,6 @@ function deplacement() {
                 break;
             }
         }
-
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.x += 5;
@@ -599,7 +510,6 @@ function deplacement() {
                 break;
             }
         }
-
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.y -= 5;
@@ -626,7 +536,6 @@ function deplacement() {
                 break;
             }
         }
-
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.x -= 5;
@@ -634,10 +543,8 @@ function deplacement() {
         }
     }
 }
-
 function firstMap() {
     const animationID = window.requestAnimationFrame(firstMap);
-
     //draw elements
     background.draw();
     boundaries.forEach((boundary) => {
@@ -655,24 +562,19 @@ function firstMap() {
     pancarte3.forEach((boundary) => {
         boundary.draw();
     });
-
     player.draw();
-    ennemieswithmotion.forEach(enemy => enemy.draw()); //draw every monster with motion
-    ennemiesmotionless.forEach(enemy => enemy.draw()); //draw every monster motionless
+    ennemy.draw();
+    ennemy2.draw();
     foreground.draw();
-    
-    //battle
+
     if (battle.initiated) {
-        animateBattle(ennemieswithmotion, ennemiesmotionless); // Appeler animateBattle seulement si le combat est initié
+        animateBattle(ennemies); // Appeler animateBattle seulement si le combat est initié
         return;
     }
-
-    
     checkEnemyCollision(animationID)
     moveEnemy(ennemyBoundaries)
     deplacement()
     pancartes()
-
     document.querySelector('#Attack1Button').innerHTML = selectedSpells[0]
     document.querySelector('#Attack2Button').innerHTML = selectedSpells[1]
 }
