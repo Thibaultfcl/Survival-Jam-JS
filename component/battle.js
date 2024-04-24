@@ -32,7 +32,8 @@ const ennemyBattle = new Sprite({
         hold: 20
     },
     animate: true,
-    isEnnemy: true
+    isEnnemy: true,
+    attackName: 'enemy1'
 })
 
 const playerBattle = new Sprite({
@@ -41,6 +42,10 @@ const playerBattle = new Sprite({
         y: 375
     },
     image: playerImgBattle,
+    initialPosition: {
+        x: 200,
+        y: 375
+    }
 });
 
 const shield = new Sprite({
@@ -49,6 +54,10 @@ const shield = new Sprite({
         y: 250
     },
     image: shieldImg,
+    initialPosition: {
+        x: 85,
+        y: 250
+    }
 });
 
 const darkSpear = new Sprite({
@@ -62,6 +71,10 @@ const darkSpear = new Sprite({
         hold: 10
     },
     animate: true,
+    initialPosition: {
+        x: 225,
+        y: 300
+    }
 });
 
 
@@ -70,25 +83,32 @@ let shieldActivated = false
 let darkSpearActivated = false
 let attackEnnemy = false
 
-function combat() {
-    window.cancelAnimationFrame(battleAnimationID);
-    document.getElementById('battleElements').style.display = 'none';
-    audio.IniBattle.play();
-        
-    moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
-        firstMap(); // Revenir à la carte principale
-        document.querySelector('#userInterface').style.display = 'none';
-        deplacement(); // Réinitialiser les positions des sprites
-    });
-    return;
+function resetBattleSprites() {
+    playerBattle.position.x = playerBattle.initialPosition.x;
+    playerBattle.position.y = playerBattle.initialPosition.y;
+    shield.position.x = shield.initialPosition.x;
+    shield.position.y = shield.initialPosition.y;
+    ennemyBattle.position.x = 700;
+    ennemyBattle.position.y = 350;
 }
 
 function animateBattle() {
     battleAnimationID = window.requestAnimationFrame(animateBattle);
 
+    console.log("battle")
     if (!battle.initiated) {
         ennemy.isDead = true;
-        combat();
+        window.cancelAnimationFrame(battleAnimationID);
+        document.getElementById('battleElements').style.display = 'none';
+        
+        moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
+            audio.IniBattle.play();
+            firstMap(); // Revenir à la carte principale
+            deplacement(); // Réinitialiser les positions des sprites
+            document.getElementById('transitionDiv').classList.remove('hide-transition');
+            document.getElementById('transitionDiv').classList.remove('show-transition');
+        });
+
         return;
     }
 
@@ -107,6 +127,10 @@ function animateBattle() {
     // Si la santé de l'ennemi est zéro, fin du combat
     if (ennemy.health <= 0) {
         battle.initiated = false;
+    }
+    if (playerBattle.health <= 0) {
+        battle.initiated = false;
+        document.getElementById('gameOverDiv').style.display = 'block';
     }
 }
 
@@ -192,34 +216,45 @@ document.getElementById('Attack2Button').addEventListener('click', (event) => {
 });
 
 let index = 0
-function spellEnnemy1() {
-    const attackArray = [5, 5, 100]
-    const attackDmg = attackArray[index]
-    index ++
-    if(index > attackArray.length-1) index = 0
+const spellFunctionsEnemy = {
+    enemy1 : () => {
+        const attackArray = [5, 5, 100]
+        const attackDmg = attackArray[index]
+        index ++
+        if(index > attackArray.length-1) index = 0
 
-    document.querySelector('#dialogueBox').style.display = 'block'
-    if(shieldActivated) {
-        document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. Your sield blocked the dammage'
-    } else {
-        document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. You lost ' + attackDmg + ' hp'
+        document.querySelector('#dialogueBox').style.display = 'block'
+        if(shieldActivated) {
+            document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. Your sield blocked the dammage'
+        } else {
+            document.querySelector('#dialogueBox').innerHTML = 'The enemy used dark spear on you. You lost ' + attackDmg + ' hp'
+        }
+
+        darkSpearActivated = true
+        if(shieldActivated) darkSpearActivated = false
+        darkSpear.frames.val = 0
+
+        ennemyBattle.attack({
+            attack: {
+                name: 'Dark Spear',
+                damage: attackDmg,
+            },
+            target: playerBattle
+        });
     }
+}
 
-    darkSpearActivated = true
-    if(shieldActivated) darkSpearActivated = false
-    darkSpear.frames.val = 0
-
-    ennemyBattle.attack({
-        attack: {
-            name: 'Dark Spear',
-            damage: attackDmg,
-        },
-        target: playerBattle
-    });
+function castEnemySpell(enemy) {
+    const spellFunction = spellFunctionsEnemy[enemy.attackName];
+    if (spellFunction) {
+        spellFunction();
+    } else {
+        console.error('No function found for this spell:', enemy.attackName);
+    }
 }
 
 document.querySelector('#dialogueBox').addEventListener('click', ()=>{
     document.querySelector('#dialogueBox').style.display = 'none'
-    if(attackEnnemy && ennemyBattle.health > 0) spellEnnemy1()
+    if(attackEnnemy && ennemyBattle.health > 0) castEnemySpell(ennemyBattle)
     attackEnnemy = false
 })

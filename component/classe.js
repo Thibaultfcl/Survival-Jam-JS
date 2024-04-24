@@ -1,5 +1,5 @@
 class Sprite {
-    constructor({position, image, frames = {max: 1, hold: 10}, sprites, animate = false, health = 100, isEnnemy = false, isDead = false}) {
+    constructor({position, image, frames = {max: 1, hold: 10}, sprites, animate = false, health = 100, isEnnemy = false, isDead = false, attackName}) {
         this.position = position
         this.image = image
         this.frames = {...frames, val: 0, elapsed: 0}
@@ -14,6 +14,7 @@ class Sprite {
         this.health = health
         this.isEnnemy = isEnnemy
         this.isDead = isDead
+        this.attackName = attackName
     }
 
     draw() {
@@ -105,15 +106,6 @@ class Boundary {
         this.width = 48
         this.height = 48
     }
-
-    // isPointInside(point) {
-    //     return (
-    //         point.x >= this.position.x &&
-    //         point.x <= this.position.x + this.width &&
-    //         point.y >= this.position.y &&
-    //         point.y <= this.position.y + this.height
-    //     );
-    // }
 
     draw() {
         c.fillStyle = "rgba(255, 0, 0, 0.5)"
