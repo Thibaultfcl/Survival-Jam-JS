@@ -58,7 +58,7 @@ const shield = new Sprite({
         x: 85,
         y: 250
     }
-});
+}); 
 
 const darkSpear = new Sprite({
     position: {
