@@ -2,7 +2,7 @@ const inventory = document.getElementById("inventory");
 const spellsContainer = document.getElementById("spells-container");
 let inventoryDisplayed = false
 let selectedSpells = ["Tackle", "Shield"];
-let learnedSpells = ["Tackle", "Shield", "Sort3", "Sort4"];
+let learnedSpells = ["Tackle", "Shield", "Lightning"];
 
 window.addEventListener("keydown", function (e) {
   switch (e.key) {
