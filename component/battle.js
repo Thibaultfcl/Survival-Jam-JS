@@ -96,41 +96,80 @@ function animateBattle() {
     battleAnimationID = window.requestAnimationFrame(animateBattle);
 
     console.log("battle")
-    if (!battle.initiated) {
-        ennemy.isDead = true;
-        window.cancelAnimationFrame(battleAnimationID);
-        document.getElementById('battleElements').style.display = 'none';
-        
-        moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
-            audio.IniBattle.play();
-            firstMap(); // Revenir à la carte principale
-            deplacement(); // Réinitialiser les positions des sprites
-            document.getElementById('transitionDiv').classList.remove('hide-transition');
-            document.getElementById('transitionDiv').classList.remove('show-transition');
-        });
+    if (ennemy) {
+        if (!battle.initiated) {
+            ennemy.isDead = true;
+            window.cancelAnimationFrame(battleAnimationID);
+            document.getElementById('battleElements').style.display = 'none';
+            
+            moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
+                audio.IniBattle.play();
+                firstMap(); // Revenir à la carte principale
+                deplacement(); // Réinitialiser les positions des sprites
+                document.getElementById('transitionDiv').classList.remove('hide-transition');
+                document.getElementById('transitionDiv').classList.remove('show-transition');
+            });
 
-        return;
-    }
+            return;
+        }
 
-    document.getElementById('transitionDiv').classList.add('hide-transition');
-    battleBackground.draw();
-    ennemyBattle.draw();
-    playerBattle.draw();
-    document.getElementById('battleElements').style.display = 'block';
+        document.getElementById('transitionDiv').classList.add('hide-transition');
+        battleBackground.draw();
+        ennemyBattle.draw();
+        playerBattle.draw();
+        document.getElementById('battleElements').style.display = 'block';
 
-    if (shieldActivated) shield.draw();
-    if (darkSpearActivated) darkSpear.draw();
-    if (darkSpear.frames.val == 19) {
-        darkSpearActivated = false;
-    }
+        if (shieldActivated) shield.draw();
+        if (darkSpearActivated) darkSpear.draw();
+        if (darkSpear.frames.val == 19) {
+            darkSpearActivated = false;
+        }
 
-    // Si la santé de l'ennemi est zéro, fin du combat
-    if (ennemy.health <= 0) {
-        battle.initiated = false;
-    }
-    if (playerBattle.health <= 0) {
-        battle.initiated = false;
-        document.getElementById('gameOverDiv').style.display = 'block';
+        // Si la santé de l'ennemi est zéro, fin du combat
+        if (ennemy2.health <= 0) {
+            battle.initiated = false;
+        }
+        if (playerBattle.health <= 0) {
+            battle.initiated = false;
+            document.getElementById('gameOverDiv').style.display = 'block';
+        }
+    } else if (ennemy2) {
+        if (!battle.initiated) {
+            ennemy2.isDead = true;
+            window.cancelAnimationFrame(battleAnimationID);
+            document.getElementById('battleElements').style.display = 'none';
+            
+            moveElementAnimated([playerBattle, shield, ennemyBattle], 0, 1000).then(() => {
+                audio.IniBattle.play();
+                firstMap(); // Revenir à la carte principale
+                deplacement(); // Réinitialiser les positions des sprites
+                document.getElementById('transitionDiv').classList.remove('hide-transition');
+                document.getElementById('transitionDiv').classList.remove('show-transition');
+            });
+
+            return;
+        }
+
+        document.getElementById('transitionDiv').classList.add('hide-transition');
+        battleBackground.draw();
+        ennemyBattle.draw();
+        playerBattle.draw();
+        document.getElementById('battleElements').style.display = 'block';
+
+        if (shieldActivated) shield.draw();
+        if (darkSpearActivated) darkSpear.draw();
+        if (darkSpear.frames.val == 19) {
+            darkSpearActivated = false;
+        }
+
+        // Si la santé de l'ennemi est zéro, fin du combat
+        if (ennemy2.health <= 0) {
+            battle.initiated = false;
+        }
+        if (playerBattle.health <= 0) {
+            battle.initiated = false;
+            document.getElementById('gameOverDiv').style.display = 'block';
+        }
     }
 }
 

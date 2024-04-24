@@ -11,13 +11,13 @@ const offset = {
 
 //music
 let audioStarted = false;
-
 function startAudio() {
     if (!audioStarted) {
         audio.Map.play();
         audioStarted = true;
     }
 }
+
 function checkEnemyCollision(animationID) {
     ennemies.forEach(enemy => {
         if (
@@ -36,19 +36,22 @@ function checkEnemyCollision(animationID) {
         }
     });
 }
+
 function moveEnemy(ennemyBoundaries) {
     ennemies.forEach(enemy => {
         if (enemy.movingLeft) {
-            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[0]})||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[2] })) {
+            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[0]}) ||
+            rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[2] }) ||
+            rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[4] })) {
                 enemy.movingLeft = false;
                 enemy.image = enemy.sprites.left;
             } else {
                 enemy.position.x -= 0.5;
             }
         } else {
-            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[1]})||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[3]})) {
+            if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[1]}) ||
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[3]}) ||
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[5]})) {
                 enemy.movingLeft = true;
                 enemy.image = enemy.sprites.right;
             } else {
@@ -61,7 +64,6 @@ function moveEnemy(ennemyBoundaries) {
 function pancartes() {
     document.querySelector('#pancartes').style.display = 'none'
     document.querySelector('#pancarteBox').style.display = 'none'
-
     pancarte1.forEach((boundary) => {
         if(rectangleCollision({
             rectangle1: player,
@@ -93,7 +95,6 @@ function pancartes() {
         }
     });
 }
-
 
 addEventListener('click', startAudio);
 
@@ -127,23 +128,32 @@ ennemy2Image.src = "./img/ennemy.png";
 const ennemy2Image2 = new Image();
 ennemy2Image2.src = "./img/ennemy2.png";
 
-const player = new Sprite({
-    position: {
-        x: canvas.width / 2 - 192 / 4 / 2,
-        y: canvas.height / 2 - 68 / 2,
-    },
-    image: playerDownImage,
-    frames: {
-        max: 4,
-        hold: 20
-    },
-    sprites: {
-        up: playerUpImage,
-        left: playerLeftImage,
-        down: playerDownImage,
-        right: playerRightImage,
-    }
-});
+const ennemy3Image = new Image();
+ennemy3Image.src = "./img/demonright.png";
+
+const ennemy3Image2 = new Image();
+ennemy3Image2.src = "./img/demonleft.png";
+
+const ennemy4Image = new Image();
+ennemy4Image.src = "./img/Evilgod.png"
+
+const ennemy5Image = new Image();
+ennemy5Image.src = "./img/hell-beast-idle-left.png";
+
+const ennemy5Image2 = new Image();
+ennemy5Image2.src = "./img/hell-beast-idle.png"
+
+const ennemy6Image = new Image();
+ennemy6Image.src = "./img/hell-beast-idle-left.png";
+
+const ennemy6Image2 = new Image();
+ennemy6Image2.src = "./img/hell-beast-idle.png"
+
+const ennemy7Image = new Image();
+ennemy7Image.src = "./img/ennemy.png";
+
+const ennemy7Image2 = new Image();
+ennemy7Image2.src = "./img/ennemy2.png";
 
 const ennemy = new Sprite({
     position: {
@@ -165,7 +175,7 @@ const ennemy = new Sprite({
 const ennemy2 = new Sprite({
     position: {
         x: 1100,
-        y: -145,
+        y: -150,
     },
     image: ennemy2Image,
     frames: {
@@ -177,6 +187,109 @@ const ennemy2 = new Sprite({
         right: ennemy2Image2,
     },
     animate: true
+});
+
+const ennemy3 = new Sprite({
+    position: {
+        x: 300,
+        y: -680,
+    },
+    image: ennemy3Image,
+    frames: {
+        max: 6,
+        hold: 50
+    },
+    sprites: {
+        left: ennemy3Image,
+        right: ennemy3Image2,
+    },
+    animate: true
+});
+
+const ennemy4 = new Sprite({
+    position: {
+        x: 5050,
+        y: -750,
+    },
+    image: ennemy4Image,
+    frames: {
+        max: 1,
+        hold: 1
+    },
+    sprites: {
+        left: ennemy4Image,
+        right: ennemy4Image,
+    },
+    animate: true
+});
+
+const ennemy5 = new Sprite({
+    position: {
+        x: 1300,
+        y: -600,
+    },
+    image: ennemy5Image,
+    frames: {
+        max: 6,
+        hold: 30
+    },
+    sprites: {
+        left: ennemy5Image,
+        right: ennemy5Image2,
+    },
+    animate: true
+});
+
+const ennemy6 = new Sprite({
+    position: {
+        x: 1100,
+        y: -700,
+    },
+    image: ennemy6Image,
+    frames: {
+        max: 6,
+        hold: 30
+    },
+    sprites: {
+        left: ennemy6Image,
+        right: ennemy6Image2,
+    },
+    animate: true
+});
+
+const ennemy7 = new Sprite({
+    position: {
+        x: 3950,
+        y: -300,
+    },
+    image: ennemy7Image,
+    frames: {
+        max: 13,
+        hold: 10
+    },
+    sprites: {
+        left: ennemy7Image,
+        right: ennemy7Image2,
+    },
+    animate: true
+});
+
+const player = new Sprite({
+    position: {
+        x: canvas.width / 2 - 192 / 4 / 2,
+        y: canvas.height / 2 - 68 / 2,
+    },
+    image: playerDownImage,
+    frames: {
+        max: 4,
+        hold: 20
+    },
+    sprites: {
+        up: playerUpImage,
+        left: playerLeftImage,
+        down: playerDownImage,
+        right: playerRightImage,
+    }
 });
 
 const background = new Sprite({
@@ -240,10 +353,35 @@ ennemyBoundaries.push(
             x: 1500,
             y: -100
         }
+    }),
+    new Boundary({
+        position: {
+            x: 220,
+            y: -600
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 800,
+            y: -600
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 3950,
+            y: -500
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 3950,
+            y: -200
+        }
     })
 );
+
 //list for all monster
-const ennemies = [ennemy,ennemy2];
+const ennemies = [ennemy, ennemy2, ennemy3, ennemy4, ennemy5, ennemy6, ennemy7];
 
 const pancarte1 = [];
 pancarte1.push(
@@ -300,7 +438,6 @@ pancarte3.push(
 )
 
 const movables = [background, ...boundaries, foreground, ...ennemies, ...ennemyBoundaries, ...pancarte1, ...pancarte2, ...pancarte3];
-
 function rectangleCollision({ rectangle1, rectangle2 }) {
     return (
         rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
@@ -387,7 +524,6 @@ let isFirstMapVisible = true;
 function deplacement() {
     let moving = true;
     player.animate = false
-
     //player movement
     if (keys.z.presser) {
         player.animate = true;
@@ -410,7 +546,6 @@ function deplacement() {
                 break;
             }
         }
-
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.y += 5;
@@ -437,7 +572,6 @@ function deplacement() {
                 break;
             }
         }
-
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.x += 5;
@@ -464,7 +598,6 @@ function deplacement() {
                 break;
             }
         }
-
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.y -= 5;
@@ -491,7 +624,6 @@ function deplacement() {
                 break;
             }
         }
-
         if (moving) {
             movables.forEach((movable) => {
                 movable.position.x -= 5;
@@ -499,10 +631,8 @@ function deplacement() {
         }
     }
 }
-
 function firstMap() {
     const animationID = window.requestAnimationFrame(firstMap);
-
     //draw elements
     background.draw();
     boundaries.forEach((boundary) => {
@@ -521,21 +651,25 @@ function firstMap() {
         boundary.draw();
     });
 
+    ennemies.forEach((enemy) => {
+        enemy.draw();
+    });
+
     player.draw();
-    ennemy.draw();
-    ennemy2.draw();
+    // ennemies.draw();
+    // ennemy2.draw();
     foreground.draw();
-    
+
     //battle
     if (battle.initiated) {
+        animateBattle(ennemies); // Appeler animateBattle seulement si le combat est initié
         return;
     }
-    
+
     checkEnemyCollision(animationID)
     moveEnemy(ennemyBoundaries)
     deplacement()
     pancartes()
-
     document.querySelector('#Attack1Button').innerHTML = selectedSpells[0]
     document.querySelector('#Attack2Button').innerHTML = selectedSpells[1]
 }
