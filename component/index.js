@@ -91,7 +91,9 @@ function moveEnemy(ennemyBoundaries) {
         if (enemy.movingLeft) {
             if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[0]}) ||
                 rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[2] }) ||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[4] })) {
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[4] })||
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[8] })||
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[10] })) {
                 enemy.movingLeft = false;
                 enemy.image = enemy.sprites.left;
             } else {
@@ -100,7 +102,9 @@ function moveEnemy(ennemyBoundaries) {
         } else {
             if (rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[1]}) ||
                 rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[3]}) ||
-                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[5]})) {
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[5]}) ||
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[9]})||
+                rectangleCollision({ rectangle1: enemy, rectangle2: ennemyBoundaries[11]})) {
                 enemy.movingLeft = true;
                 enemy.image = enemy.sprites.right;
             } else {
@@ -226,6 +230,18 @@ ennemy7Image.src = "./img/ennemy.png";
 const ennemy7Image2 = new Image();
 ennemy7Image2.src = "./img/ennemy2.png";
 
+const ennemy8Image = new Image();
+ennemy8Image.src = "./img/ennemy.png";
+
+const ennemy8Image2 = new Image();
+ennemy8Image2.src = "./img/ennemy2.png";
+
+const ennemy9Image = new Image();
+ennemy9Image.src = "./img/BringerofDeathLeft.png";
+
+const ennemy9Image2 = new Image();
+ennemy9Image2.src = "./img/BringerofDeath.png";
+
 const player = new Sprite({
     position: {
         x: canvas.width / 2 - 192 / 4 / 2,
@@ -251,6 +267,8 @@ createEnemy(5050, -750, ennemy4Image, { max: 1, hold: 1 }, ennemy4Image, { max: 
 createEnemy(1300, -600, ennemy5Image, { max: 6, hold: 30}, ennemy5Image, { max: 6, hold: 30 }, ennemy5Image2, { max: 6, hold: 30 }, false,false); //Hell beast
 createEnemy(1100, -700, ennemy6Image, { max: 6, hold: 30}, ennemy6Image, { max: 6, hold: 30 }, ennemy6Image2, { max: 6, hold: 30 }, false,false); //Hell beast
 createEnemy(3950, -300, ennemy7Image, { max: 13, hold: 10 }, ennemy7Image, { max: 13, hold: 10 }, ennemy7Image2, { max: 13, hold: 10}, false,true); // skeleton
+createEnemy(3500, -1400, ennemy8Image, { max: 13, hold: 10 }, ennemy8Image, { max: 13, hold: 10 }, ennemy8Image2, { max: 13, hold: 10}, true,false); //Skeleton
+createEnemy(4400, 600, ennemy9Image, { max: 8, hold: 30}, ennemy9Image, { max: 8, hold: 30}, ennemy9Image2, { max: 8, hold: 30}, true,false);
 
 const background = new Sprite({
     position: {
@@ -337,7 +355,31 @@ ennemyBoundaries.push(
             x: 3950,
             y: -200
         }
-    })
+    }),
+    new Boundary({
+        position: {
+            x: 3300,
+            y: -1375
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 3900,
+            y: -1375
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 4350,
+            y: 665
+        }
+    }),
+    new Boundary({
+        position: {
+            x: 4800,
+            y: 665
+        }
+    }),
 );
 const pancarte1 = [];
 pancarte1.push(
@@ -495,7 +537,7 @@ function deplacement() {
                         ...boundary,
                         position: {
                             x: boundary.position.x,
-                            y: boundary.position.y + 5
+                            y: boundary.position.y + 20
                         }
                     }
                 })
@@ -507,7 +549,7 @@ function deplacement() {
 
         if (moving) {
             movables.forEach((movable) => {
-                movable.position.y += 5;
+                movable.position.y += 20;
             });
         }
     } else if (keys.q.presser) {
@@ -521,7 +563,7 @@ function deplacement() {
                     rectangle2: {
                         ...boundary,
                         position: {
-                            x: boundary.position.x + 5,
+                            x: boundary.position.x + 20,
                             y: boundary.position.y
                         }
                     }
@@ -549,7 +591,7 @@ function deplacement() {
                         ...boundary,
                         position: {
                             x: boundary.position.x,
-                            y: boundary.position.y - 5
+                            y: boundary.position.y - 20
                         }
                     }
                 })
@@ -561,7 +603,7 @@ function deplacement() {
 
         if (moving) {
             movables.forEach((movable) => {
-                movable.position.y -= 5;
+                movable.position.y -= 20;
             });
         }
     } else if (keys.d.presser) {
@@ -575,7 +617,7 @@ function deplacement() {
                     rectangle2: {
                         ...boundary,
                         position: {
-                            x: boundary.position.x - 5,
+                            x: boundary.position.x - 20,
                             y: boundary.position.y
                         }
                     }
@@ -588,7 +630,7 @@ function deplacement() {
 
         if (moving) {
             movables.forEach((movable) => {
-                movable.position.x -= 5;
+                movable.position.x -= 20;
             });
         }
     }
@@ -630,7 +672,7 @@ function firstMap() {
     }
 
     
-    checkEnemyCollision(animationID)
+    //checkEnemyCollision(animationID)
     moveEnemy(ennemyBoundaries)
     deplacement()
     pancartes()
