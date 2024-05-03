@@ -8,6 +8,8 @@ const shieldImg = new Image()
 shieldImg.src = './img/shield.png'
 const darkSpearImg = new Image()
 darkSpearImg.src = './img/Darkspear.png'
+const lightningImg = new Image()
+lightningImg.src = './img/lightning.png'
 const battleBackground = new Sprite({
     position: {
         x: -200,
@@ -68,10 +70,27 @@ const darkSpear = new Sprite({
         y: 300
     }
 });
+const lightning = new Sprite({
+    position: {
+        x: 650,
+        y: 300
+    },
+    image: lightningImg,
+    frames: {
+        max: 14,
+        hold: 10
+    },
+    animate: true,
+    initialPosition: {
+        x: 650,
+        y: 300
+    }
+})
 const playerWithSpells = [playerBattle, shield];
 let shieldActivated = false
 let darkSpearActivated = false
 let attackEnnemy = false
+let lightningActivated = false
 function resetBattleSprites() {
     playerBattle.position.x = playerBattle.initialPosition.x;
     playerBattle.position.y = playerBattle.initialPosition.y;
@@ -85,7 +104,6 @@ let battleAnimationID;
 function animateBattle() {
     battleAnimationID = window.requestAnimationFrame(animateBattle);
 
-    console.log("battle")
     if (!battle.initiated) {
         ennemy.isDead = true;
         window.cancelAnimationFrame(battleAnimationID);
@@ -110,6 +128,10 @@ function animateBattle() {
     if (darkSpearActivated) darkSpear.draw();
     if (darkSpear.frames.val == 19) {
         darkSpearActivated = false;
+    }
+    if (lightningActivated) lightning.draw();
+    if (lightning.frames.val == 13) {
+        lightningActivated = false;
     }
     // Si la santé de l'ennemi est zéro, fin du combat
     if (ennemy.health <= 0) {
@@ -150,7 +172,7 @@ function moveElementAnimated(elements, deltaX, duration) {
 const spellFunctions = {
     Tackle: () => {
         document.querySelector('#dialogueBox').style.display = 'block'
-        document.querySelector('#dialogueBox').innerHTML = 'You used Tackle and dealed a total of 10 dmg'
+        document.querySelector('#dialogueBox').innerHTML = 'You used Tackle and dealed a total of 20 dmg'
 
         moveElementAnimated(playerWithSpells, -2, 750)
             .then(() => {
@@ -160,7 +182,7 @@ const spellFunctions = {
                 playerBattle.attack({
                     attack: {
                         name: 'Tackle',
-                        damage: 50,
+                        damage: 20,
                     },
                     target: ennemyBattle
                 });
@@ -177,6 +199,22 @@ const spellFunctions = {
         shieldActivated = true;
         attackEnnemy = true;
     },
+    Lightning: () => {
+        document.querySelector('#dialogueBox').style.display = 'block'
+        document.querySelector('#dialogueBox').innerHTML = 'You used dark spear and dealed a total of 80 dmg'
+
+        lightningActivated = true
+        lightning.frames.val = 0
+
+        playerBattle.attack({
+            attack: {
+                name: 'Lightning',
+                damage: 80,
+            },
+            target: ennemyBattle
+        });
+        attackEnnemy = true;
+    }
 };
 
 function castEquippedSpell(equippedSpell) {

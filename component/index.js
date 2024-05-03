@@ -113,39 +113,6 @@ ennemy2Image.src = "./img/Ennemy.png";
 const ennemy2Image2 = new Image();
 ennemy2Image2.src = "./img/Ennemy2.png";
 
-const ennemy3Image = new Image();
-ennemy3Image.src = "./img/Demonright.png";
-
-const ennemy3Image2 = new Image();
-ennemy3Image2.src = "./img/Demonleft.png";
-
-const ennemy4Image = new Image();
-ennemy4Image.src = "./img/evilgod.png"
-
-const ennemy5Image = new Image();
-ennemy5Image.src = "./img/Hell-beast-idle-left.png";
-
-const ennemy5Image2 = new Image();
-ennemy5Image2.src = "./img/Hell-beast-idle.png"
-
-const ennemy6Image = new Image();
-ennemy6Image.src = "./img/Hell-beast-idle-left.png";
-
-const ennemy6Image2 = new Image();
-ennemy6Image2.src = "./img/Hell-beast-idle.png"
-
-const ennemy7Image = new Image();
-ennemy7Image.src = "./img/Ennemy.png";
-
-const ennemy7Image2 = new Image();
-ennemy7Image2.src = "./img/Ennemy2.png";
-
-const ennemy8Image = new Image();
-ennemy8Image.src = "./img/Ennemy.png";
-
-const ennemy8Image2 = new Image();
-ennemy8Image2.src = "./img/Ennemy2.png";
-
 const player = new Sprite({
     position: {
         x: canvas.width / 2 - 192 / 4 / 2,
